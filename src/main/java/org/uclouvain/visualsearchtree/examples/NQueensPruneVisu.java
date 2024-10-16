@@ -18,6 +18,7 @@ package org.uclouvain.visualsearchtree.examples;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 
@@ -41,32 +42,47 @@ public class NQueensPruneVisu {
 
     public static void main(String[] args) throws Exception {
 
-        NQueensPrune nqueens = new NQueensPrune(4);
+        NQueensSolver nQueensSolver = new NQueensSolver(8);
         Gson gson = new Gson();
         Tree t = new Tree(-1);
 
-        TreeVisual tv = new TreeVisual(()-> nqueens.dfs(new DFSListener() {
+        TreeVisual tv = new TreeVisual(()-> nQueensSolver.solve("bfs", new SolverListener() {
             @Override
             public void solution(int id, int pId) {
-                String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(nqueens.q)+"\"}";
+                String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(nQueensSolver.queens)+"\"}";
                 TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
-                t.createNode(id,pId, Tree.NodeType.SOLUTION,() -> showChessBoard(infoData,Tree.NodeType.SOLUTION), info);
+
+                // S'assurer que showChessBoard est appelé dans le bon thread
+                Platform.runLater(() -> t.createNode(id, pId, Tree.NodeType.SOLUTION, () -> showChessBoard(infoData, Tree.NodeType.SOLUTION), info));
             }
+
             @Override
             public void fail(int id, int pId) {
-                String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(nqueens.q)+"\"}";
+                String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(nQueensSolver.queens)+"\"}";
                 TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
-                t.createNode(id,pId, Tree.NodeType.FAIL,() -> showChessBoard(infoData,Tree.NodeType.FAIL), info);
+
+                // Utiliser Platform.runLater pour garantir l'exécution dans le bon thread
+                Platform.runLater(() -> t.createNode(id, pId, Tree.NodeType.FAIL, () -> showChessBoard(infoData, Tree.NodeType.FAIL), info));
             }
+
             @Override
             public void branch(int id, int pId, int nChilds) {
-                String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(nqueens.q)+"\"}";
+                String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(nQueensSolver.queens)+"\"}";
                 TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
-                t.createNode(id,pId, Tree.NodeType.INNER,() -> showChessBoard(infoData, Tree.NodeType.INNER), info);
+
+                // S'assurer que l'UI est manipulée dans le bon thread
+                Platform.runLater(() -> t.createNode(id, pId, Tree.NodeType.INNER, () -> showChessBoard(infoData, Tree.NodeType.INNER), info));
             }
         }), t, false);
 
-        Visualizer.show(tv);
+        // Lancer l'interface graphique avec TreeVisual
+        Platform.runLater(() -> {
+            try {
+                Visualizer.show(tv);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     /**
@@ -106,7 +122,7 @@ public class NQueensPruneVisu {
      * @param nodeInfoData info parse to gson object of the concerned node
      */
     public static void showChessBoard(TreeVisual.NodeInfoData nodeInfoData, Tree.NodeType type){
-        int n = NQueensPrune.nVisu;
+        int n = NQueensSolver.numVisualizations;
         Map<Integer, Integer> coordinates = new Gson().fromJson(nodeInfoData.other, new TypeToken<HashMap<Integer, Integer>>() {}.getType());
         GridPane chess = new GridPane();
         Scene chessScene = new Scene(chess, n*50 +n, n*50 +n);
