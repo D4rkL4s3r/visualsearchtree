@@ -52,10 +52,34 @@ public class Tree {
      * @param info
      */
     public void createNode(int id, int pId, NodeType type, NodeAction nodeAction, String info) {
-        Node n = nodeMap.get(pId).addChild(id, pId,"child",type,"branch", nodeAction, info);
-        nodeMap.put(id,n);
-        notifyNodeCreated(id, pId, type, nodeAction,info);
+        /*printNodeMap();*/
+        if (nodeMap.containsKey(pId)) {
+            Node n = nodeMap.get(pId).addChild(id, pId,"child",type,"branch", nodeAction, info);
+            nodeMap.put(id,n);
+            notifyNodeCreated(id, pId, type, nodeAction,info);
+        }else{
+            /*System.err.println("Erreur : le nœud parent avec l'ID " + pId + " n'existe pas dans nodeMap");
+            printNodeMap();*/
+        }
     }
+
+    public void printNodeMap() {
+        System.out.println("===== NodeMap =====");
+        for (Map.Entry<Integer, Node> entry : nodeMap.entrySet()) {
+            int nodeId = entry.getKey();
+            Node node = entry.getValue();
+
+            System.out.println("Node ID: " + nodeId);
+            System.out.println("  Parent ID: " + node.getNodePid());
+            System.out.println("  Info: " + node.getInfo());
+            System.out.println("  Node Type: " + node.getType());
+            System.out.println("  Number of Children: " + node.children.size());
+
+            System.out.println();
+        }
+        System.out.println("===================");
+    }
+
 
     /**
      * <b>Note: </b>Assign new  {@link org.uclouvain.visualsearchtree.tree.Tree.Node Node} to it Parent in order to build tree hierarchy

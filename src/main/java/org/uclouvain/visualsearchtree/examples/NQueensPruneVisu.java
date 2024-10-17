@@ -42,11 +42,11 @@ public class NQueensPruneVisu {
 
     public static void main(String[] args) throws Exception {
 
-        NQueensSolver nQueensSolver = new NQueensSolver(8);
+        NQueensSolver nQueensSolver = new NQueensSolver(4);
         Gson gson = new Gson();
         Tree t = new Tree(-1);
 
-        TreeVisual tv = new TreeVisual(()-> nQueensSolver.solve("bfs", new SolverListener() {
+        TreeVisual tv = new TreeVisual(()-> nQueensSolver.solve("dfs", new SolverListener() {
             @Override
             public void solution(int id, int pId) {
                 String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(nQueensSolver.queens)+"\"}";
