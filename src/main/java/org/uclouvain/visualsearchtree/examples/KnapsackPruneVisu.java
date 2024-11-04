@@ -23,12 +23,9 @@ public class KnapsackPruneVisu {
 
     public static void main(String[] args) throws Exception {
 
-        int[] weights = {2, 3, 4, 5}; // Example weights
-        int[] values = {3, 4, 5, 6};  // Example values
-        int capacity = 7;  // Example capacity
-        /*int capacity = 1;
-        int[] values = {1};
-        int[] weights = {1};*/
+        int[] weights = {2, 3, 4, 5};
+        int[] values = {3, 4, 5, 6};
+        int capacity = 7;
 
         KnapsackSolver knapsackSolver = new KnapsackSolver(weights, values, capacity);
         Gson gson = new Gson();
@@ -42,14 +39,12 @@ public class KnapsackPruneVisu {
                 String info = "{\"value\": "+totalValue+", \"weight\": "+totalWeight+", \"domain\": "+id+", \"other\": \""+ getNodeValue(knapsackSolver.getItemsSelected()) +"\"}";
                 TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
 
-                // S'assurer que showKnapsack est appelé dans le bon thread
-                Platform.runLater(() -> t.createNode(id, pId, Tree.NodeType.SOLUTION, () -> {
+                t.createNode(id, pId, Tree.NodeType.SOLUTION, () -> {
                         formatIntList(knapsackSolver.getItemsSelected());
                         System.out.println(info);
                         showKnapsack(infoData, Tree.NodeType.SOLUTION);
                     },
-                        info)
-                );
+                        info);
             }
 
             @Override
@@ -59,14 +54,12 @@ public class KnapsackPruneVisu {
                 String info = "{\"value\": "+totalValue+", \"weight\": "+totalWeight+", \"domain\": "+id+", \"other\": \""+ getNodeValue(knapsackSolver.getItemsSelected()) +"\"}";
                 TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
 
-                // Utiliser Platform.runLater pour garantir l'exécution dans le bon thread
-                Platform.runLater(() -> t.createNode(id, pId, Tree.NodeType.FAIL, () -> {
+                t.createNode(id, pId, Tree.NodeType.FAIL, () -> {
                         formatIntList(knapsackSolver.getItemsSelected());
                         System.out.println(info);
                         showKnapsack(infoData, Tree.NodeType.FAIL);
                     },
-                        info)
-                );
+                        info);
             }
 
             @Override
@@ -76,18 +69,16 @@ public class KnapsackPruneVisu {
                 String info = "{\"value\": "+totalValue+", \"weight\": "+totalWeight+", \"domain\": "+id+", \"other\": \""+ getNodeValue(knapsackSolver.getItemsSelected()) +"\"}";
                 TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
 
-                // S'assurer que l'UI est manipulée dans le bon thread
-                Platform.runLater(() -> t.createNode(id, pId, Tree.NodeType.INNER, () -> {
+                t.createNode(id, pId, Tree.NodeType.INNER, () -> {
                         formatIntList(knapsackSolver.getItemsSelected());
                         System.out.println(info);
                         showKnapsack(infoData, Tree.NodeType.INNER);
                     },
-                    info)
-                );
+                    info);
+
             }
         }), t, false);
 
-        // Lancer l'interface graphique avec TreeVisual
         Platform.runLater(() -> {
             try {
                 Visualizer.show(tv);
@@ -103,12 +94,12 @@ public class KnapsackPruneVisu {
         for (int i = 0; i < itemsSelected.length; i++) {
             formattedString.append(i).append(":").append(itemsSelected[i]);
             if (i != (itemsSelected.length - 1)) {
-                formattedString.append(","); // Ajouter une virgule entre les éléments
+                formattedString.append(",");
             }
         }
 
-        formattedString.append("}"); // Fermer la chaîne avec une accolade
-        return formattedString.toString(); // Retourner la chaîne formatée
+        formattedString.append("}");
+        return formattedString.toString();
     }
 
 
@@ -154,30 +145,23 @@ public class KnapsackPruneVisu {
         // Convertir les données en Map
         Map<Integer, Integer> items = new Gson().fromJson(nodeInfoData.other, new TypeToken<HashMap<Integer, Integer>>() {}.getType());
 
-        // Vérifiez la taille des items pour éviter les problèmes d'index
-        int n = items.size(); // Utiliser la taille de la carte directement
+        int n = items.size();
 
-        // Créer la grille pour l'affichage
         GridPane grid = new GridPane();
-        Scene gridScene = new Scene(grid, n * 50 + n, 100); // Hauteur de 100 pour une seule ligne.
+        Scene gridScene = new Scene(grid, n * 50 + n, 100);
         Stage knapsackWindow = new Stage();
 
         knapsackWindow.setTitle("Knapsack Visualisation");
         knapsackWindow.setScene(gridScene);
 
-        // Boucle sur les éléments de la carte
         for (int i = 0; i < n; i++) {
-            // Vérifiez que l'élément existe dans la carte
             if (items.containsKey(i)) {
                 grid.add(createRectangleForVisualisation(items.get(i) == 1, type), i, 0);
             } else {
                 System.out.println("Aucun élément trouvé pour la clé : " + i);
-                // Ajoutez éventuellement un rectangle pour représenter l'absence d'élément
                 grid.add(createRectangleForVisualisation(false, type), i, 0); // Par exemple, un rectangle vide
             }
         }
         knapsackWindow.show();
     }
-
-
 }

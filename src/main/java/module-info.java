@@ -3,6 +3,7 @@ module org.uclouvain.visualsearchtree {
     requires javafx.fxml;
     requires java.desktop;
     requires com.google.gson;
+    requires org.junit.jupiter.api;
 
 //    opens org.uclouvain.visualsearchtree to javafx.fxml;
 //    opens org.uclouvain.visualsearchtree.tree to javafx.fxml;
