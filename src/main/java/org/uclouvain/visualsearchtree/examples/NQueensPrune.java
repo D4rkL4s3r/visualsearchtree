@@ -38,7 +38,7 @@ public class NQueensPrune {
 
     private int nodeId = 0;
 
-    public void dfs(DFSListener listener) {
+    public void dfs(SolverListener listener) {
         nodeId = -1;
         try {
             dfs(0,listener, -1);
@@ -47,7 +47,7 @@ public class NQueensPrune {
         }
     }
 
-    private void dfs(int idx, DFSListener listener, int pId) {
+    private void dfs(int idx, SolverListener listener, int pId) {
         nRecur++;
         int id = ++nodeId;
         if (idx == n) {

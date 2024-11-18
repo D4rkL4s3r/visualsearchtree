@@ -722,7 +722,7 @@ public class TreeVisual {
      */
     public void createNode(int id, int pId, Tree.NodeType type, NodeAction onClick, String info){
         Platform.runLater(()->{
-            tree.crateIndNode(id, pId, type, onClick, info);
+            tree.createNode(id, pId, type, onClick, info);
             this.tempList.put(id,pId);
         });
     }

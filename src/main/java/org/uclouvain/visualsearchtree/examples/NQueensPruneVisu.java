@@ -22,7 +22,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.uclouvain.visualsearchtree.tree.*;
 
@@ -47,7 +46,7 @@ public class NQueensPruneVisu {
         tv.setRealtimeItv(300);
         Visualizer.show(tv);
 
-        Thread t2 = new Thread(() -> nqueens.dfs(new DFSListener() {
+        Thread t2 = new Thread(() -> nqueens.dfs(new SolverListener() {
                 @Override
                 public void solution(int id, int pId) {
                     System.out.println("solution");
