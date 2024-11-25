@@ -11,6 +11,8 @@ import java.util.List;
  * Implementation of the Knapsack solved using the {@link BranchAndBound}
  */
 public class BranchAndBoundKnapsack {
+
+    private static boolean DEBUG = false;
     public static void main(String[] args) {
 
         int[] value = new int[]{1, 6, 18, 22, 28};
@@ -46,6 +48,7 @@ public class BranchAndBoundKnapsack {
         openNodes.add(root);
 
         BranchAndBound.minimize(null, openNodes,node -> {
+            if (DEBUG)
             System.out.println("new best solution: "+- node.lowerBound());
         });
     }

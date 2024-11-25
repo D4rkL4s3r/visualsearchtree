@@ -14,6 +14,8 @@ import java.util.function.Consumer;
  */
 public class BranchAndBound {
 
+    private static boolean DEBUG = false;
+
     /**
      * Explore completely the search space
      * defined by the nodes initially
@@ -35,7 +37,8 @@ public class BranchAndBound {
         int iter = 0;
 
         while (!openNode.isEmpty()) {
-            System.out.println(String.format("Iteration %d", ++iter));
+            if (DEBUG)
+                System.out.println(String.format("Iteration %d", ++iter));
             iter++;
             Node<T> n = openNode.remove();
             if (n.isSolutionCandidate()) {
@@ -54,11 +57,9 @@ public class BranchAndBound {
             } else if (n.lowerBound() < upperBound) {
                 //TODO maybe solverListener.branch
                 if (n.getParent() == null){
-                    System.out.println(n.children());
                     openNode.add(n);
                     listener.branch(n.getId(), -1, n.children().size());
                 }else {
-                    System.out.println(n.children());
                     openNode.add(n);
                     listener.branch(n.getId(), n.getParent().getId(), n.children().size());
                 }
@@ -67,11 +68,9 @@ public class BranchAndBound {
                 }
             }
         }
-        System.out.println("#iter:" + iter);
+        if (DEBUG)
+            System.out.println("#iter:" + iter);
     }
-
-
-
 }
 
 /**
