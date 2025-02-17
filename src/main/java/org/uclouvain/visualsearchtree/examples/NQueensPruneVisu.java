@@ -37,7 +37,6 @@ import java.util.Map;
 public class NQueensPruneVisu {
 
     public static void main(String[] args) throws InterruptedException {
-
         NQueensPrune nqueens = new NQueensPrune(4);
         TreeVisual tv = new TreeVisual();
         Gson gson = new Gson();
@@ -46,34 +45,40 @@ public class NQueensPruneVisu {
         tv.setRealtimeItv(300);
         Visualizer.show(tv);
 
-        Thread t2 = new Thread(() -> nqueens.dfs(new SolverListener() {
+        long startTime = System.nanoTime(); // Début du chronométrage
+
+        Thread t2 = new Thread(() -> {
+            nqueens.dfs(new SolverListener() {
                 @Override
                 public void solution(int id, int pId) {
-                    System.out.println("solution");
                     String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(nqueens.q)+"\"}";
                     TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
-                    tv.createNode(id,pId, Tree.NodeType.SOLUTION,() -> {
-                        showChessBoard(infoData,Tree.NodeType.SOLUTION);}, info);
+                    tv.createNode(id, pId, Tree.NodeType.SOLUTION, () -> showChessBoard(infoData, Tree.NodeType.SOLUTION), info);
                 }
+
                 @Override
                 public void fail(int id, int pId) {
-                    System.out.println("fail");
                     String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(nqueens.q)+"\"}";
                     TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
-                    tv.createNode(id,pId, Tree.NodeType.FAIL,() -> {showChessBoard(infoData,Tree.NodeType.FAIL);}, info);
+                    tv.createNode(id, pId, Tree.NodeType.FAIL, () -> showChessBoard(infoData, Tree.NodeType.FAIL), info);
                 }
+
                 @Override
                 public void branch(int id, int pId, int nChilds) {
-                    System.out.println("branch");
                     String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(nqueens.q)+"\"}";
                     TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
-                    tv.createNode(id,pId, Tree.NodeType.INNER,() -> {
-                        showChessBoard(infoData, Tree.NodeType.INNER);}, info);
+                    tv.createNode(id, pId, Tree.NodeType.INNER, () -> showChessBoard(infoData, Tree.NodeType.INNER), info);
                 }
-            }));
-            t2.start();
+            });
+            long endTime = System.nanoTime(); // Fin du chronométrage
+            long duration = (endTime - startTime) / 1_000_000; // Convertir en millisecondes
+            System.out.println("Temps de construction de l'arbre : " + duration + " ms");
+        });
 
+        t2.start();
+        t2.join();
     }
+
 
     /**
      * Smple function to return the node value as string during the search

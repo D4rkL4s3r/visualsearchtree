@@ -13,6 +13,7 @@ import org.uclouvain.visualsearchtree.tree.Tree;
 import org.uclouvain.visualsearchtree.tree.TreeVisual;
 import org.uclouvain.visualsearchtree.tree.Visualizer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +47,7 @@ public class KnapSackVisu {
                     System.out.println("solution");
                 synchronized (openNodes) {
                     NodeKnapsack tmp = (NodeKnapsack) openNodes.remove();
-                    String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(tmp.weight)+"\"}";
+                    String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(tmp.selectedWeights, tmp.selectedValues)+"\"}";
                     TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
                     tv.createNode(id,pId, Tree.NodeType.SOLUTION,() -> {
                         showBag(infoData,Tree.NodeType.SOLUTION);
@@ -59,7 +60,7 @@ public class KnapSackVisu {
                     System.out.println("fail");
                 synchronized (openNodes) {
                     NodeKnapsack tmp = (NodeKnapsack) openNodes.remove();
-                    String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(tmp.weight)+"\"}";
+                    String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(tmp.selectedWeights, tmp.selectedValues)+"\"}";
                     TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
                     tv.createNode(id,pId, Tree.NodeType.FAIL,() -> {
                         showBag(infoData,Tree.NodeType.FAIL);
@@ -72,7 +73,7 @@ public class KnapSackVisu {
                     System.out.println("branch");
                 synchronized (openNodes) {
                     NodeKnapsack tmp = (NodeKnapsack) openNodes.remove();
-                    String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(tmp.weight)+"\"}";
+                    String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(tmp.selectedWeights, tmp.selectedValues)+"\"}";
                     TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
                     tv.createNode(id,pId, Tree.NodeType.INNER,() -> {
                         showBag(infoData,Tree.NodeType.INNER);
@@ -89,14 +90,14 @@ public class KnapSackVisu {
     /**
      * Smple function to return the node value as string during the search
      * tab of "index" : value (0: q[0] | 1: q[1] |... n: q[n])
-     * @param q: int tab
+     * @param w: int tab
      * @return : String value
      */
-    public static String getNodeValue(int[] q){
+    public static String getNodeValue(ArrayList w, ArrayList v){
         StringBuilder value = new StringBuilder("{");
-        for (int i = 0; i < q.length; i++) {
-            value.append(i).append(":").append(q[i]);
-            if (i != (q.length - 1))
+        for (int i = 0; i < w.size(); i++) {
+            value.append(w.get(i)).append(":").append(v.get(i));
+            if (i != (w.size() - 1))
                 value.append(",");
         }
         value.append("}");

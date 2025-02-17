@@ -1,228 +1,13 @@
 package org.uclouvain.visualsearchtree.tree;
 
-import java.io.Serializable;
 import java.util.*;
+
+// https://www.microsoft.com/en-us/research/wp-content/uploads/1996/01/drawingtrees.pdf
 
 public class Tree {
     HashMap<Integer, Node> nodeMap;
     int rootId;
 
-    public enum NodeType {
-        INNER, SKIP, FAIL, SOLUTION
-    }
-
-    public Tree(int rootId) {
-        nodeMap = new HashMap<>();
-        this.rootId = rootId;
-        nodeMap.put(rootId, new Node("root"));
-    }
-
-    public void createNode(int id, int pId, NodeType type, NodeAction nodeAction, String info) {
-        Node n = nodeMap.get(pId).addChild(id, "child", type, "branch", nodeAction, info);
-        nodeMap.put(id, n);
-    }
-
-    public void attachToParent(int pId, Node n) {
-        if (nodeMap.get(pId) != null) {
-            nodeMap.get(pId).children.add(nodeMap.get(n.nodeId));
-        }
-    }
-
-    public Node root() {
-        return nodeMap.get(rootId);
-    }
-
-    public static class Node<T> {
-        public int nodeId;
-        public T label;
-        public NodeType type;
-        public List<Node<T>> children;
-        public List<T> edgeLabels;
-        public NodeAction nodeAction;
-        public T info;
-        public int nodePid;
-
-        public Node(T label) {
-            this.label = label;
-            this.type = NodeType.INNER;
-            this.children = new LinkedList<>();
-            this.edgeLabels = new LinkedList<>();
-            this.nodeAction = () -> {};
-        }
-
-        public Node(int nodeId, T label, NodeType type, List<Node<T>> children, List<T> edgeLabels, NodeAction nodeAction, T info) {
-            this.nodeId = nodeId;
-            this.label = label;
-            this.type = type;
-            this.children = children;
-            this.edgeLabels = edgeLabels;
-            this.nodeAction = nodeAction;
-            this.info = info;
-        }
-
-        public Node(int nodeId, int nodePid, T label, List<Node<T>> children, List<T> edgeLabels, NodeType type, T info) {
-            this.nodeId = nodeId;
-            this.nodePid = nodePid;
-            this.label = label;
-            this.children = children;
-            this.edgeLabels = edgeLabels;
-            this.type = type;
-            this.nodeAction = () -> {}; // Action par défaut
-            this.info = info;
-        }
-
-        public Node addChild(int nodeId, T nodeLabel, NodeType type, T branchLabel, NodeAction nodeAction, T info) {
-            Node child = new Node(nodeId, nodeLabel, type, new LinkedList<>(), new LinkedList<>(), nodeAction, info);
-            children.add(child);
-            edgeLabels.add(branchLabel);
-            return child;
-        }
-
-        public PositionedNode<T> design() {
-            Pair<PositionedNode<T>, Extent> res = design_();
-            return res.left();
-        }
-
-        public T getLabel() {
-            return label;
-        }
-        public int getNodeId() {
-            return nodeId;
-        }
-        public NodeAction getNodeAction() {
-            return nodeAction;
-        }
-        public NodeType getType() {
-            return type;
-        }
-        public T getInfo() {
-            return  info;
-        }
-
-        private Pair<PositionedNode<T>, Extent> design_() {
-            List<PositionedNode<T>> subtrees = new ArrayList<>();
-            List<Extent> subtreeExtents = new ArrayList<>();
-
-            for (Node<T> child : children) {
-                Pair<PositionedNode<T>, Extent> result = child.design_();
-                subtrees.add(result.left());
-                subtreeExtents.add(result.right());
-            }
-
-            List<Double> positions = Extent.fitList(subtreeExtents);
-            List<PositionedNode<T>> positionedSubtrees = new ArrayList<>();
-
-            for (int i = 0; i < subtrees.size(); i++) {
-                positionedSubtrees.add(subtrees.get(i).moveTree(positions.get(i)));
-            }
-
-            Extent mergedExtent = new Extent();
-            for (int i = 0; i < subtreeExtents.size(); i++) {
-                mergedExtent.mergeIncremental(subtreeExtents.get(i).move(positions.get(i)));
-            }
-            mergedExtent.offsets.add(0.0);
-
-            PositionedNode<T> positionedNode = new PositionedNode<>(nodeId, label, type, positionedSubtrees, edgeLabels, nodeAction, 0, info);
-            return new Pair<>(positionedNode, mergedExtent);
-        }
-    }
-
-    public static class PositionedNode<T> {
-        public int nodeId;
-        public double position;
-        public T label;
-        public NodeType type;
-        public List<PositionedNode<T>> children;
-        public List<T> edgeLabels;
-        public T info;
-        public NodeAction nodeAction;
-
-        public PositionedNode(int nodeId, T label, NodeType type, List<PositionedNode<T>> children, List<T> edgeLabels, NodeAction nodeAction, double position, T info) {
-            this.nodeId = nodeId;
-            this.label = label;
-            this.type = type;
-            this.children = children;
-            this.edgeLabels = edgeLabels;
-            this.nodeAction = nodeAction;
-            this.position = position;
-            this.info = info;
-        }
-
-        public PositionedNode moveTree(double x) {
-            return new PositionedNode(nodeId, label, type, children, edgeLabels, nodeAction, position + x, info);
-        }
-    }
-
-    static class Extent {
-        List<Double> offsets;
-
-        public Extent() {
-            this.offsets = new LinkedList<>();
-        }
-
-        public Extent move(double delta) {
-            Extent moved = new Extent();
-            for (double offset : offsets) {
-                moved.offsets.add(offset + delta);
-            }
-            return moved;
-        }
-
-        public void mergeIncremental(Extent other) {
-            List<Double> newOffsets = new LinkedList<>(); // Nouvelle liste pour stocker les résultats
-            Iterator<Double> thisIter = this.offsets.iterator();
-            Iterator<Double> otherIter = other.offsets.iterator();
-
-            while (thisIter.hasNext() && otherIter.hasNext()) {
-                newOffsets.add(Math.max(thisIter.next(), otherIter.next()));
-            }
-
-            // Ajouter les éléments restants de l'une ou l'autre des listes
-            while (thisIter.hasNext()) {
-                newOffsets.add(thisIter.next());
-            }
-            while (otherIter.hasNext()) {
-                newOffsets.add(otherIter.next());
-            }
-
-            // Remplacer la liste actuelle par la nouvelle liste mise à jour
-            this.offsets = newOffsets;
-        }
-
-        public static List<Double> fitList(List<Extent> extents) {
-            List<Double> positions = new ArrayList<>();
-            Extent cumulative = new Extent();
-            for (Extent e : extents) {
-                double offset = cumulative.fit(e);
-                positions.add(offset);
-                cumulative.mergeIncremental(e.move(offset));
-            }
-            return positions;
-        }
-
-        public double fit(Extent other) {
-            double maxOffset = 0;
-            Iterator<Double> thisIter = this.offsets.iterator();
-            Iterator<Double> otherIter = other.offsets.iterator();
-            while (thisIter.hasNext() && otherIter.hasNext()) {
-                maxOffset = Math.max(maxOffset, thisIter.next() - otherIter.next() + 1);
-            }
-            return maxOffset;
-        }
-    }
-
-    static record Pair<L, R>(L left, R right) {}
-}
-/*
-package org.uclouvain.visualsearchtree.tree;
-
-// https://www.microsoft.com/en-us/research/wp-content/uploads/1996/01/drawingtrees.pdf
-
-import java.util.*;
-
-public class Tree {
-    HashMap<Integer,Node> nodeMap;
-    int rootId;
     public enum NodeType {
         INNER,
         SKIP,
@@ -230,12 +15,10 @@ public class Tree {
         SOLUTION
     }
 
-    */
-/**
-     * <b>Note: </b> Create Tree from  {@link org.uclouvain.visualsearchtree.tree.Tree.Node Node} id
+    /**
+     * <b>Note: </b> Création d'un arbre à partir de l'id d'un {@link org.uclouvain.visualsearchtree.tree.Tree.Node Node}
      * @param rootId
-     *//*
-
+     */
     public Tree(int rootId) {
         nodeMap = new HashMap<>();
         this.rootId = rootId;
@@ -243,64 +26,52 @@ public class Tree {
         nodeMap.put(rootId, new Node("root"));
     }
 
-    */
-/**
-     * <b>Note: </b> Create new Npde
-     * @param id
-     * @param pId
-     * @param type
-     * @param nodeAction
-     * @param info
-     *//*
-
+    /**
+     * <b>Note: </b> Crée un nouveau Node
+     */
     public void createNode(int id, int pId, NodeType type, NodeAction nodeAction, String info) {
-        Node n = nodeMap.get(pId).addChild(id,"child",type,"branch", nodeAction, info);
-        nodeMap.put(id,n);
+        Node n = nodeMap.get(pId).addChild(id, "child", type, "branch", nodeAction, info);
+        nodeMap.put(id, n);
     }
 
-    */
-/**
-     * <b>Note: </b>Assign new  {@link org.uclouvain.visualsearchtree.tree.Tree.Node Node} to it Parent in order to build tree hierarchy
+    /**
+     * <b>Note: </b> Associe un Node à son parent pour construire la hiérarchie de l'arbre
      * @param pId parent Id
-     * @param n node to attach
-     *//*
-
+     * @param n node à attacher
+     */
     public void attachToParent(int pId, Node n) {
         if (nodeMap.get(pId) != null) {
             nodeMap.get(pId).children.add(nodeMap.get(n.nodeId));
         }
     }
 
-    */
-/**
-     * <b>Note: </b> Add new node to nodemap without linked it to its parent
+    /**
+     * <b>Note: </b> Ajoute un node dans le nodeMap sans le lier à son parent
      * @param id node Id
      * @param pId parent Id
      * @param type node Type
      * @param nodeAction node action
      * @param info node info
-     *//*
-
-    public void crateIndNode(int id, int pId, NodeType type, NodeAction nodeAction, String info){
-        nodeMap.put(id, new Tree.Node(id, pId,"child", type, new LinkedList<>(), new LinkedList(), nodeAction, info));
+     */
+    public void crateIndNode(int id, int pId, NodeType type, NodeAction nodeAction, String info) {
+        nodeMap.put(id, new Tree.Node(id, pId, "child", type, new LinkedList<>(), new LinkedList<>(), nodeAction, info));
     }
 
+
+    /**
+     * <b>Note: </b> Retourne le noeud de la racine
+     * @return Un {@link org.uclouvain.visualsearchtree.tree.Tree.Node Node} qui est la racine de l'arbre
+     */
     public Node root() {
         return nodeMap.get(rootId);
     }
 
+    static record Pair<L, R>(L left, R right) { }
 
-    static record Pair<L, R>(L left, R right) {
-
-    }
-
-
-    */
-/**
-     * <b>Note: </b> Used to create Tree
+    /**
+     * <b>Note: </b> Classe Node utilisée pour créer l'arbre
      * @param <T>
-     *//*
-
+     */
     public static class Node<T> {
         public int nodeId;
         public int nodePid;
@@ -310,6 +81,8 @@ public class Tree {
         public List<Node<T>> children;
         public List<T> edgeLabels;
         public NodeAction nodeAction;
+        // Ajout de la largeur du nœud (bounding box). Par défaut 1.0.
+        public double nodeWidth = 3.0;
 
         @Override
         public String toString() {
@@ -319,10 +92,11 @@ public class Tree {
                     ", edgeLabels=" + edgeLabels +
                     ", nodeAction=" + nodeAction +
                     ", type=" + type +
+                    ", width=" + nodeWidth +
                     ']';
         }
 
-        public Node(){
+        public Node() {
             this.type = NodeType.INNER;
             this.children = new LinkedList<>();
             this.edgeLabels = new LinkedList<>();
@@ -344,6 +118,7 @@ public class Tree {
             this.nodeAction = nodeAction;
             this.info = info;
         }
+
         public Node(int nodeId, T label, NodeType type, List<Node<T>> children, List<T> edgeLabels, NodeAction nodeAction, T info) {
             this.nodeId = nodeId;
             this.label = label;
@@ -375,19 +150,9 @@ public class Tree {
             this.info = info;
         }
 
-        */
-/**
-         *
-         * @param nodeId Node Id
-         * @param nodePid node Parent Id
-         * @param label Node label
-         * @param type Node Type
-         * @param children Node children
-         * @param edgeLabels Node Edge Labels
-         * @param nodeAction Node action
-         * @param info Node info
-         *//*
-
+        /**
+         * Constructeur complet
+         */
         public Node(int nodeId, int nodePid, T label, NodeType type, List<Node<T>> children, List<T> edgeLabels, NodeAction nodeAction, T info) {
             this.nodeId = nodeId;
             this.nodePid = nodePid;
@@ -399,12 +164,20 @@ public class Tree {
             this.info = info;
         }
 
+        /**
+         * Ajoute un enfant et retourne ce nouveau Node.
+         */
         public Node addChild(int nodeId, T nodeLabel, NodeType type, T branchLabel, NodeAction nodeAction, T info) {
-            Node child = new Node(nodeId,nodeLabel, type, new LinkedList<>(), new LinkedList(), nodeAction, info);
+            Node child = new Node(nodeId, nodeLabel, type, new LinkedList<>(), new LinkedList<>(), nodeAction, info);
+            // Si nécessaire, vous pouvez définir child.nodeWidth ici (par exemple en fonction de nodeLabel)
             children.add(child);
             edgeLabels.add(branchLabel);
             return child;
         }
+
+        /**
+         * La méthode design construit récursivement la disposition de l'arbre et renvoie un PositionedNode.
+         */
         public PositionedNode<T> design() {
             Pair<PositionedNode<T>, Extent> res = design_();
             return res.left();
@@ -418,6 +191,7 @@ public class Tree {
                 subtrees.add(res.left());
                 subtreeExtents.add(res.right());
             }
+            // Calcul des positions à partir des extents des sous-arbres
             List<Double> positions = Extent.fitList(subtreeExtents);
 
             List<PositionedNode<T>> subtreesMoved = new LinkedList<>();
@@ -428,16 +202,18 @@ public class Tree {
             Iterator<Double> posIte = positions.iterator();
 
             while (childIte.hasNext() && posIte.hasNext() && extentIte.hasNext()) {
-
                 double pos = posIte.next();
+                System.out.println("Position : " + pos);
                 subtreesMoved.add(childIte.next().moveTree(pos));
                 extentsMoved.add(extentIte.next().move(pos));
             }
 
+            // Fusion des extents des sous-arbres
             Extent resExtent = Extent.merge(extentsMoved);
-            resExtent.addFirst(0, 0);
-            PositionedNode<T> resTree = new PositionedNode<T>(nodeId,label, type, subtreesMoved, edgeLabels, nodeAction, 0, info);
-            return new Pair(resTree, resExtent);
+            // Ajout de l'extent du nœud courant, en tenant compte de sa largeur
+            resExtent.addFirst(-nodeWidth / 2, nodeWidth / 2);
+            PositionedNode<T> resTree = new PositionedNode<>(nodeId, label, type, subtreesMoved, edgeLabels, nodeAction, 0, info);
+            return new Pair<>(resTree, resExtent);
         }
 
         public void addChildren(Node<T> newChild) {
@@ -447,26 +223,29 @@ public class Tree {
         public T getLabel() {
             return label;
         }
+
         public int getNodeId() {
             return nodeId;
         }
+
         public int getNodePid() {
             return nodePid;
         }
+
         public NodeAction getNodeAction() {
             return nodeAction;
         }
+
         public NodeType getType() {
             return type;
         }
+
         public T getInfo() {
-            return  info;
+            return info;
         }
     }
 
-
     public static class PositionedNode<T> {
-
         public int nodeId;
         public double position;
         public T label;
@@ -476,8 +255,8 @@ public class Tree {
         public T info;
         public NodeAction nodeAction;
 
-        public PositionedNode(int id, T label, NodeType type, List<PositionedNode<T>> children, List<T> edgeLabels, org.uclouvain.visualsearchtree.tree.NodeAction nodeAction, double position, T info) {
-            this.nodeId=id;
+        public PositionedNode(int id, T label, NodeType type, List<PositionedNode<T>> children, List<T> edgeLabels, NodeAction nodeAction, double position, T info) {
+            this.nodeId = id;
             this.label = label;
             this.type = type;
             this.children = children;
@@ -487,18 +266,15 @@ public class Tree {
             this.info = info;
         }
 
-        //        public PositionedNode moveTree(double x) {
-//            return new PositionedNode(label, children, edgeLabels, info, nodeAction, position + x, type);
-//        }
         public PositionedNode moveTree(double x) {
-            return new PositionedNode(nodeId,label, type, children, edgeLabels, nodeAction, position + x, info);
+            return new PositionedNode(nodeId, label, type, children, edgeLabels, nodeAction, position + x, info);
         }
 
         @Override
         public String toString() {
             return "PositionedNode{" +
                     "nodeId=" + nodeId +
-                    "position=" + position +
+                    ", position=" + position +
                     ", label=" + label +
                     ", type=" + type +
                     ", children=" + children +
@@ -507,94 +283,116 @@ public class Tree {
                     ", nodeAction=" + nodeAction +
                     '}';
         }
-
     }
 
+    /**
+     * La classe Extent permet de représenter l'étendue horizontale d'un sous-arbre.
+     * Ici, nous utilisons un offset pour réaliser les déplacements en O(1).
+     * Nous utilisons également NODE_SPACING pour ajuster l'espacement en tenant compte
+     * éventuellement de la taille réelle des nœuds.
+     */
     static class Extent {
-
-        double minDist = 1.0;
-
+        // Offset pour représenter le déplacement global
+        double offset;
         List<Pair<Double, Double>> extentList;
+        // Espace minimal entre les nœuds (modifiable)
+        static final double NODE_SPACING = 6.0;
 
         public Extent() {
-            this(new LinkedList<Pair<Double, Double>>());
+            this(new LinkedList<>());
         }
 
         public Extent(List<Pair<Double, Double>> extentList) {
             this.extentList = extentList;
+            this.offset = 0.0;
         }
 
         public Extent(double left, double right) {
-            List.of(new Pair(left, right));
+            this();
+            this.extentList.add(new Pair<>(left, right));
         }
-
 
         public boolean isEmpty() {
             return extentList.isEmpty();
         }
 
         public void add(double x1, double x2) {
-            extentList.add(new Pair(x1, x2));
+            extentList.add(new Pair<>(x1, x2));
         }
 
         public void addFirst(double x1, double x2) {
-            extentList.add(0, new Pair(x1, x2));
+            extentList.add(0, new Pair<>(x1, x2));
         }
 
+        /**
+         * Déplace l'extent en temps constant grâce à l'offset.
+         */
         public Extent move(double x) {
-            return new Extent(extentList.stream().map(p -> new Pair<Double, Double>(p.left() + x, p.right() + x)).toList());
+            Extent result = new Extent(new LinkedList<>(this.extentList));
+            result.offset = this.offset + x;
+            return result;
         }
 
-
+        /**
+         * Fusionne deux extents en tenant compte de leurs offsets, puis normalise le résultat.
+         */
         public Extent merge(Extent other) {
-
-            List<Pair<Double, Double>> f = extentList;
-            List<Pair<Double, Double>> s = other.extentList;
             List<Pair<Double, Double>> r = new LinkedList<>();
-
-            Iterator<Pair<Double, Double>> fi = f.iterator();
-            Iterator<Pair<Double, Double>> si = s.iterator();
+            Iterator<Pair<Double, Double>> fi = this.extentList.iterator();
+            Iterator<Pair<Double, Double>> si = other.extentList.iterator();
 
             while (fi.hasNext() && si.hasNext()) {
-                r.add(new Pair(fi.next().left(), si.next().right()));
+                Pair<Double, Double> p = fi.next();
+                Pair<Double, Double> q = si.next();
+                double left = p.left() + this.offset;
+                double right = q.right() + other.offset;
+                r.add(new Pair<>(left, right));
             }
-
-            if (!fi.hasNext()) {
-                while (si.hasNext()) {
-                    r.add(si.next());
+            while (fi.hasNext()) {
+                Pair<Double, Double> p = fi.next();
+                r.add(new Pair<>(p.left() + this.offset, p.right() + this.offset));
+            }
+            while (si.hasNext()) {
+                Pair<Double, Double> q = si.next();
+                r.add(new Pair<>(q.left() + other.offset, q.right() + other.offset));
+            }
+            // Normaliser pour que le premier niveau commence à 0.
+            if (!r.isEmpty()) {
+                double norm = r.get(0).left();
+                List<Pair<Double, Double>> normalized = new LinkedList<>();
+                for (Pair<Double, Double> pair : r) {
+                    normalized.add(new Pair<>(pair.left() - norm, pair.right() - norm));
                 }
+                return new Extent(normalized);
+            } else {
+                return new Extent();
             }
-
-            if (!si.hasNext()) {
-                while (fi.hasNext()) {
-                    r.add(fi.next());
-                }
-            }
-            return new Extent(r);
         }
 
         public static Extent merge(List<Extent> extents) {
-            Extent r = new Extent(); // empty
+            Extent r = new Extent(); // extent vide
             for (Extent e : extents) {
                 r = r.merge(e);
             }
             return r;
         }
 
+        /**
+         * Calcule l'écart minimal nécessaire entre cet extent et l'autre, en tenant compte des offsets.
+         * On utilise NODE_SPACING pour définir un espace minimal en plus.
+         */
         public Double fit(Extent other) {
-            List<Pair<Double, Double>> f = extentList;
-            List<Pair<Double, Double>> s = other.extentList;
-
-            Iterator<Pair<Double, Double>> fi = f.iterator();
-            Iterator<Pair<Double, Double>> si = s.iterator();
-
-            Double minDist = 0.0;
-
+            Iterator<Pair<Double, Double>> fi = this.extentList.iterator();
+            Iterator<Pair<Double, Double>> si = other.extentList.iterator();
+            double minDist = 0.0;
             while (fi.hasNext() && si.hasNext()) {
-                minDist = Math.max(minDist, fi.next().right() - si.next().left() +1);
+                Pair<Double, Double> p = fi.next();
+                Pair<Double, Double> q = si.next();
+                double right = p.right() + this.offset;
+                double left = q.left() + other.offset;
+                minDist = Math.max(minDist, right - left + NODE_SPACING);
             }
             return minDist;
-
         }
 
         public static List<Double> fitListLeft(List<Extent> extents) {
@@ -609,15 +407,15 @@ public class Tree {
         }
 
         public static List<Double> fitListRight(List<Extent> extents) {
-            Collections.reverse(extents);
+            List<Extent> reversed = new LinkedList<>(extents);
+            Collections.reverse(reversed);
             List<Double> res = new LinkedList<>();
             Extent acc = new Extent();
-            for (Extent e : extents) {
+            for (Extent e : reversed) {
                 double x = -e.fit(acc);
                 res.add(x);
                 acc = e.move(x).merge(acc);
             }
-            Collections.reverse(extents);
             Collections.reverse(res);
             return res;
         }
@@ -626,10 +424,12 @@ public class Tree {
             List<Double> left = fitListLeft(extents);
             List<Double> right = fitListRight(extents);
             List<Double> res = new LinkedList<>();
-            for (Iterator<Double> leftIte = left.iterator(), rightIte = right.iterator(); leftIte.hasNext() && rightIte.hasNext(); ) {
+            Iterator<Double> leftIte = left.iterator();
+            Iterator<Double> rightIte = right.iterator();
+            while (leftIte.hasNext() && rightIte.hasNext()) {
                 res.add((leftIte.next() + rightIte.next()) / 2);
             }
             return res;
         }
     }
-}*/
+}

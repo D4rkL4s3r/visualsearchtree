@@ -29,8 +29,8 @@ public class NodeKnapsack implements Node<NodeKnapsack> {
 
     int depth;
 
-    ArrayList<Integer> selectedValues;
-    ArrayList<Integer> selectedWeights;
+    public ArrayList<Integer> selectedValues;
+    public ArrayList<Integer> selectedWeights;
 
     /**
      *
@@ -58,6 +58,8 @@ public class NodeKnapsack implements Node<NodeKnapsack> {
 
         // Initialize selected items lists based on parent state
         this.selectedValues = (parent == null) ? new ArrayList<>() : new ArrayList<>(parent.selectedValues);
+        if (parent != null)
+            System.out.println(parent.selectedValues.toString());
         this.selectedWeights = (parent == null) ? new ArrayList<>() : new ArrayList<>(parent.selectedWeights);
     }
 
