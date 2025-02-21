@@ -203,7 +203,6 @@ public class Tree {
 
             while (childIte.hasNext() && posIte.hasNext() && extentIte.hasNext()) {
                 double pos = posIte.next();
-                System.out.println("Position : " + pos);
                 subtreesMoved.add(childIte.next().moveTree(pos));
                 extentsMoved.add(extentIte.next().move(pos));
             }
@@ -296,7 +295,7 @@ public class Tree {
         double offset;
         List<Pair<Double, Double>> extentList;
         // Espace minimal entre les nœuds (modifiable)
-        static final double NODE_SPACING = 6.0;
+        static final double NODE_SPACING = 2.0;
 
         public Extent() {
             this(new LinkedList<>());
@@ -328,7 +327,7 @@ public class Tree {
          * Déplace l'extent en temps constant grâce à l'offset.
          */
         public Extent move(double x) {
-            Extent result = new Extent(new LinkedList<>(this.extentList));
+            Extent result = new Extent(this.extentList);
             result.offset = this.offset + x;
             return result;
         }
@@ -356,17 +355,7 @@ public class Tree {
                 Pair<Double, Double> q = si.next();
                 r.add(new Pair<>(q.left() + other.offset, q.right() + other.offset));
             }
-            // Normaliser pour que le premier niveau commence à 0.
-            if (!r.isEmpty()) {
-                double norm = r.get(0).left();
-                List<Pair<Double, Double>> normalized = new LinkedList<>();
-                for (Pair<Double, Double> pair : r) {
-                    normalized.add(new Pair<>(pair.left() - norm, pair.right() - norm));
-                }
-                return new Extent(normalized);
-            } else {
-                return new Extent();
-            }
+            return new Extent(r);
         }
 
         public static Extent merge(List<Extent> extents) {

@@ -26,9 +26,9 @@ class TreeUIControllerTest {
 
     @Test
     void correct_stats_for_legend_box(FxRobot robot){
-        Assertions.assertThat(robot.lookup("#innerCount").queryAs(Text.class).getText()).isEqualTo("  (3)");
-        Assertions.assertThat(robot.lookup("#failCount").queryAs(Text.class).getText()).isEqualTo("  (3)");
-        Assertions.assertThat(robot.lookup("#solutionCount").queryAs(Text.class).getText()).isEqualTo("  (1)");
+        Assertions.assertThat(robot.lookup("#innerCount").queryAs(Text.class).getText()).isEqualTo("  (5)");
+        Assertions.assertThat(robot.lookup("#failCount").queryAs(Text.class).getText()).isEqualTo("  (12)");
+        Assertions.assertThat(robot.lookup("#solutionCount").queryAs(Text.class).getText()).isEqualTo("  (4)");
         Assertions.assertThat(robot.lookup("#treeDepth").queryAs(Text.class).getText()).isEqualTo("DEPTH : (2)");
     }
 

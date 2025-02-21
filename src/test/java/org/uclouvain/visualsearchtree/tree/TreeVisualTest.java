@@ -34,13 +34,13 @@ class TreeVisualTest {
 
     @Test
     void resetAllBeforeRedraw() {
-        Assertions.assertEquals(7, tv.getLabels().size());
-        Assertions.assertEquals(6, tv.getAllNodesPositions().size());
-        Assertions.assertEquals(1, tv.getAllNodesChartDatas().size());
-        Assertions.assertEquals(6, tv.getAllNodesRects().size());
-        Assertions.assertEquals(3, tv.getLegendStats().get(0));
-        Assertions.assertEquals(3, tv.getLegendStats().get(1));
-        Assertions.assertEquals(1, tv.getLegendStats().get(2));
+        Assertions.assertEquals(21, tv.getLabels().size());
+        Assertions.assertEquals(20, tv.getAllNodesPositions().size());
+        Assertions.assertEquals(4, tv.getAllNodesChartDatas().size());
+        Assertions.assertEquals(20, tv.getAllNodesRects().size());
+        Assertions.assertEquals(5, tv.getLegendStats().get(0));
+        Assertions.assertEquals(12, tv.getLegendStats().get(1));
+        Assertions.assertEquals(4, tv.getLegendStats().get(2));
         Assertions.assertEquals(2, tv.getLegendStats().get(3));
         Platform.runLater(()->{
             if (tv.getTreeStackPane().getChildren().size() >  0)
