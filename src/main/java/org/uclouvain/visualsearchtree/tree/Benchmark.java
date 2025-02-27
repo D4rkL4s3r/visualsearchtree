@@ -1,4 +1,3 @@
-/*
 package org.uclouvain.visualsearchtree.tree;
 
 import org.openjdk.jmh.annotations.*;
@@ -43,4 +42,3 @@ public class Benchmark {
         return treeRoot.design();
     }
 }
-*/
