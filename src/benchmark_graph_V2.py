@@ -2,25 +2,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def parse_file(filename):
-    """
-    Lit le fichier de benchmark et extrait pour chaque bloc la valeur de max_depth et le temps moyen (en ns).
-    On s'attend à trouver dans le fichier des lignes de la forme :
-      "Benchmarking Tree.design() with max_depth: <max_depth>, depth: <depth>"
-    et
-      "Average time for Tree.design() at depth <depth>: <average_time> ns"
-    """
     max_depths = []
     average_times = []
     current_max_depth = None
     with open(filename, 'r') as file:
         for line in file:
             line = line.strip()
-            # Détection de la valeur de max_depth utilisée
             if line.startswith("Benchmarking"):
-                # Exemple : "Benchmarking Tree.design() with max_depth: 10, depth: 0"
                 parts = line.split("with max_depth:")
                 if len(parts) >= 2:
-                    remainder = parts[1].strip()  # "10, depth: 0"
+                    remainder = parts[1].strip()
                     parts2 = remainder.split(", depth:")
                     if len(parts2) >= 2:
                         try:
@@ -28,7 +19,6 @@ def parse_file(filename):
                         except ValueError:
                             continue
             elif line.startswith("Average time"):
-                # Exemple : "Average time for Tree.design() at depth 0: 123456 ns"
                 parts = line.split(":")
                 if len(parts) >= 2 and current_max_depth is not None:
                     try:
@@ -40,50 +30,51 @@ def parse_file(filename):
     return max_depths, average_times
 
 def main():
-    # Fichiers de résultats (ils doivent se trouver dans le même répertoire que ce script)
     tree_file = "benchmark_results_tree.txt"
     oldtree_file = "benchmark_results_oldtree.txt"
 
-    # Extraction des données
     max_depths_tree, avg_times_tree = parse_file(tree_file)
     max_depths_oldtree, avg_times_oldtree = parse_file(oldtree_file)
 
-    # Tri des données par max_depth
     tree_data = sorted(zip(max_depths_tree, avg_times_tree))
     oldtree_data = sorted(zip(max_depths_oldtree, avg_times_oldtree))
     max_depths_tree, avg_times_tree = zip(*tree_data)
     max_depths_oldtree, avg_times_oldtree = zip(*oldtree_data)
 
-    #conversion de la depth en nodes
     max_depths_tree = [2**(d+1)-1 for d in max_depths_tree]
     max_depths_oldtree = [2**(d+1)-1 for d in max_depths_oldtree]
-
-    # Conversion des temps de nanosecondes en millisecondes (1 ms = 1e6 ns)
     avg_times_tree = [t / 1e3 for t in avg_times_tree]
     avg_times_oldtree = [t / 1e3 for t in avg_times_oldtree]
 
-    # Création du graphique
+    coeffs_tree = np.polyfit(max_depths_tree, avg_times_tree, 1)
+    coeffs_oldtree = np.polyfit(max_depths_oldtree, avg_times_oldtree, 1)
+    
+    poly_tree = np.poly1d(coeffs_tree)
+    poly_oldtree = np.poly1d(coeffs_oldtree)
+    
+    x_range = np.linspace(0, max(max_depths_tree + max_depths_oldtree), 100)
+    
     plt.figure(figsize=(10, 6))
-    plt.plot(max_depths_tree, avg_times_tree, marker='o', linestyle='-', label='Tree.design()')
-    plt.plot(max_depths_oldtree, avg_times_oldtree, marker='s', linestyle='-', label='OldTree.design()')
-
-    # Axes en échelle linéaire, commençant à 0
+    plt.plot(max_depths_tree, avg_times_tree, 'o', label='Tree.design()')
+    plt.plot(max_depths_oldtree, avg_times_oldtree, 's', label='OldTree.design()')
+    plt.plot(x_range, poly_tree(x_range), '--', label=f'Tree fit: y={coeffs_tree[0]:.2e}x + {coeffs_tree[1]:.2e}')
+    plt.plot(x_range, poly_oldtree(x_range), '--', label=f'OldTree fit: y={coeffs_oldtree[0]:.2e}x + {coeffs_oldtree[1]:.2e}')
+    
     plt.xlim(left=0)
     plt.ylim(bottom=0)
-
-    # Désactivation de la notation scientifique sur les axes
     plt.ticklabel_format(style='plain', axis='both')
-
-    plt.xlabel('Max Depth')
-    plt.ylabel('Temps moyen (ms)')  # Mise à jour de l'unité
+    plt.xlabel('Max Depth (converted to nodes)')
+    plt.ylabel('Temps moyen (ms)')
     plt.title('Résultats des benchmarks')
     plt.legend()
     plt.grid(True, which="both", ls="--", lw=0.5)
     plt.tight_layout()
 
-    # Sauvegarde et affichage du graphique
     plt.savefig("benchmark_results.png")
     plt.show()
+    
+    print(f"Tree.design() fit: y = {coeffs_tree[0]:.6f}x + {coeffs_tree[1]:.6f}")
+    print(f"OldTree.design() fit: y = {coeffs_oldtree[0]:.6f}x + {coeffs_oldtree[1]:.6f}")
 
 if __name__ == '__main__':
     main()

@@ -1,7 +1,7 @@
 package org.uclouvain.visualsearchtree.tree;
 
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -10,47 +10,32 @@ import java.io.PrintWriter;
 
 public class BenchmarkJUnitTest {
 
-    // Nombre d'itérations pour le warm-up et la mesure
-    private static final int WARMUP_ITERATIONS = 50;
-    private static final int MEASURE_ITERATIONS = 1000;
+    private static final int WARMUP_ITERATIONS =1;
+    private static final int MEASURE_ITERATIONS = 5;
 
-    /**
-     * Benchmark pour Tree.design().
-     * Les résultats sont écrits dans le fichier "benchmark_results_tree.txt".
-     */
     @ParameterizedTest
-    @ValueSource(longs = {
-            100L,
-            1000L,
-            10000L,
-            100000L,
-            1000000L,
-            10000000L,
-            100000000L,
-            1000000000L,
-            10000000000L,
-            100000000000L,
-            1000000000000L,
-            10000000000000L,
-            100000000000000L,
-            1000000000000000L,
-            100000000000000000L,
-            1000000000000000000L
+    @CsvSource({
+            "10, 0", // 2.047 nodes -> 2^(max_depth+1)-1
+            "15, 0", // 65.535 nodes
+            "20, 0", // 2.097.151 nodes
+            //"22, 0", // 8.388.607 nodes
+            "25, 0", // 67.108.863 nodes
+            /*"30, 0", // 2.147.483.647 nodes
+            "35, 0", // 68.719.476.735 nodes
+            "40, 0", // 2.199.023.255.551 nodes
+            "45, 0", // 70.368.744.177.663 nodes*/
     })
-    public void benchmarkTreeDesign(long depth) throws IOException {
+    public void benchmarkTreeDesign(long max_depth, long depth) throws IOException {
         String fileName = "benchmark_results_tree.txt";
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(fileName, true)))) {
-            writer.println("Benchmarking Tree.design() with depth: " + depth);
+            writer.println("Benchmarking Tree.design() with max_depth: " + max_depth + ", depth: " + depth);
 
-            // Création de l'arbre à tester
-            Tree.Node<String> treeRoot = RandomTreeGenerator.randomTree(depth);
+            Tree.Node<String> treeRoot = TreeGenerator.generateTree(max_depth, depth);
 
-            // Phase de warm-up
             for (int i = 0; i < WARMUP_ITERATIONS; i++) {
                 treeRoot.design();
             }
 
-            // Phase de mesure
             long totalTime = 0;
             for (int i = 0; i < MEASURE_ITERATIONS; i++) {
                 long startTime = System.nanoTime();
@@ -58,7 +43,7 @@ public class BenchmarkJUnitTest {
                 long endTime = System.nanoTime();
                 long duration = endTime - startTime;
                 totalTime += duration;
-                writer.println("Iteration " + (i + 1) + ": " + duration + " ns, result: " + result);
+                writer.println("Iteration " + (i + 1) + ": " + duration + " ns");
             }
             long averageTime = totalTime / MEASURE_ITERATIONS;
             writer.println("Average time for Tree.design() at depth " + depth + ": " + averageTime + " ns");
@@ -66,38 +51,29 @@ public class BenchmarkJUnitTest {
         }
     }
 
-    /**
-     * Benchmark pour OldTree.design().
-     * Les résultats sont écrits dans le fichier "benchmark_results_oldtree.txt".
-     */
     @ParameterizedTest
-    @ValueSource(longs = {
-            100L,
-            1000L,
-            10000L,
-            100000L,
-            1000000L,
-            10000000L,
-            100000000L,
-            1000000000L,
-            10000000000L,
-            100000000000L,
-            1000000000000L
+    @CsvSource({
+            "10, 0", // 2.047 nodes -> 2^(max_depth+1)-1
+            "15, 0", // 65.535 nodes
+            "20, 0", // 2.097.151 nodes
+            //"22, 0", // 8.388.607 nodes
+            "25, 0", // 67.108.863 nodes
+            /*"30, 0", // 2.147.483.647 nodes
+            "35, 0", // 68.719.476.735 nodes
+            "40, 0", // 2.199.023.255.551 nodes
+            "45, 0", // 70.368.744.177.663 nodes*/
     })
-    public void benchmarkOldTreeDesign(long depth) throws IOException {
+    public void benchmarkOldTreeDesign(long max_depth, long depth) throws IOException {
         String fileName = "benchmark_results_oldtree.txt";
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(fileName, true)))) {
-            writer.println("Benchmarking OldTree.design() with depth: " + depth);
+            writer.println("Benchmarking OldTree.design() with max_depth: " + max_depth + ", depth: " + depth);
 
-            // Création de l'arbre (OldTree) à tester
-            OldTree.Node<String> oldTreeRoot = RandomTreeGenerator.randomOldTree(depth);
+            OldTree.Node<String> oldTreeRoot = TreeGenerator.generateOldtree(max_depth, depth);
 
-            // Phase de warm-up
             for (int i = 0; i < WARMUP_ITERATIONS; i++) {
                 oldTreeRoot.design();
             }
 
-            // Phase de mesure
             long totalTime = 0;
             for (int i = 0; i < MEASURE_ITERATIONS; i++) {
                 long startTime = System.nanoTime();
@@ -105,10 +81,10 @@ public class BenchmarkJUnitTest {
                 long endTime = System.nanoTime();
                 long duration = endTime - startTime;
                 totalTime += duration;
-                writer.println("Iteration " + (i + 1) + ": " + duration + " ns, result: " + result);
+                writer.println("Iteration " + (i + 1) + ": " + duration + " ns");
             }
             long averageTime = totalTime / MEASURE_ITERATIONS;
-            writer.println("Average time for OldTree.design() at depth " + depth + ": " + averageTime + " ns");
+            writer.println("Average time for OldTree.design() at depth " + max_depth + ": " + averageTime + " ns");
             writer.println("------------------------------------------------------");
         }
     }
