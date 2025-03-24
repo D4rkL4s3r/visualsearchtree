@@ -14,23 +14,22 @@ import java.io.IOException;
 /**
  * <h1>Complete Visualization Object Class</h1>
  * <p>
- *     VisualTree is a Graphic Component that hel the user to visualize the look of it search Algorithm
- *     and interact with it of need. It allow the user to perfrom the following action:
+ *     VisualTree is a Graphic Component that helps the user to visualize the search algorithm's tree
+ *     and interact with it if needed. It allows the user to perform the following actions:
  * </p>
  * <ul>
  *     <li>
- *         <b>Show Tree</b>: [{@link org.uclouvain.visualsearchtree.tree.VisualTree:treeProfilerLaucher() treeProfilerLaucher}] Show the research tree, in real time or not, it can be display lonely
- *         or with all other features.
+ *         <b>Show Tree</b>: [{@link org.uclouvain.visualsearchtree.tree.VisualTree#treeProfilerLauncher(Tree.Node, Stage)}]
+ *         Show the search tree (in real time or not), either displayed alone or with all other features.
  *     </li>
  *     <li>
- *         <b>Show optimization graph</b>: Display the optimization graph is the research Algorithm is about optimization.
- *         , it can aolso bedisplay with other features.
+ *         <b>Show optimization graph</b>: Display the optimization graph when the search algorithm is about optimization.
  *     </li>
  *     <li>
- *         <b>Show Legend</b>: display the number of solution or fail of all Nodes after the research.
+ *         <b>Show Legend</b>: Display the count of solutions or failures among all nodes after the search.
  *     </li>
  *     <li>
- *         <b>Add bookMark</b>: to set a reference point in search tree node for after.
+ *         <b>Add bookmark</b>: Set a reference point on a search tree node for later use.
  *     </li>
  * </ul>
  */
@@ -38,18 +37,18 @@ public class VisualTree {
 
     /**
      * <p>
-     *     It render new screen instance of {@link org.uclouvain.visualsearchtree.tree.VisualTree VisualTree}
+     *     Render a new screen instance of {@link org.uclouvain.visualsearchtree.tree.VisualTree VisualTree}.
      * </p>
-     * @param node
-     * @param primaryStage
+     * @param node the root node of the tree; if null, the tree will not be preconstructed.
+     * @param primaryStage the primary stage.
      * @see #treeProfilerLauncher(TreeVisual)
      */
     public static void treeProfilerLauncher(Tree.Node<String> node, Stage primaryStage) {
-        TreeVisual instance = new TreeVisual(node);
+        // Si le node passé est null, on utilise le constructeur par défaut qui ne construit pas d'arbre.
+        TreeVisual instance = (node == null) ? new TreeVisual() : new TreeVisual(node);
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                // Update UI here.
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TreeUI.fxml"));
                     Parent root = fxmlLoader.load();
@@ -75,7 +74,7 @@ public class VisualTree {
                     treeController.init();
 
                     /** GRAPH **/
-                    //creating the chart
+                    // Creating the chart
                     final LineChart<Number,Number> lineChart = instance.getTreeChart(true);
                     VBox chart = (VBox) scene.lookup("#chartUI");
                     chart.getChildren().add(lineChart);
@@ -87,17 +86,15 @@ public class VisualTree {
                 }
             }
         });
-
     }
 
     /**
      * <p>
-     *     It render new screen instance of {@link org.uclouvain.visualsearchtree.tree.VisualTree VisualTree}
+     *     Render a new screen instance of {@link org.uclouvain.visualsearchtree.tree.VisualTree VisualTree}
      * </p>
-     * @param instance TreeVisual instance
+     * @param instance a TreeVisual instance (can be built without a tree)
      */
-    public static void treeProfilerLauncher(TreeVisual instance)
-    {
+    public static void treeProfilerLauncher(TreeVisual instance) {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -126,7 +123,6 @@ public class VisualTree {
                     treeController.init();
 
                     /** GRAPH **/
-                    //creating the chart
                     VBox chart = (VBox) scene.lookup("#chartUI");
                     chart.getChildren().add(instance.getTreeChart(true));
                     instance.addEventOnChart();

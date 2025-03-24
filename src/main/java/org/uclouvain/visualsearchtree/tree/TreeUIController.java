@@ -1,6 +1,9 @@
 package org.uclouvain.visualsearchtree.tree;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,10 +32,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -439,6 +443,97 @@ public class TreeUIController {
         if( anchorSkip.getChildren().contains(skipBtn) ){
             System.out.println("Skip Button has been clicked");
             anchorSkip.getChildren().remove(skipBtn);
+        }
+    }
+
+    public void exportTree(ActionEvent actionEvent) {
+        if (instance == null || instance.getNode() == null) {
+            System.out.println("Aucun arbre à exporter.");
+            return;
+        }
+
+        // Convertir l'arbre en JSON
+        Gson gson = new GsonBuilder().setPrettyPrinting().setExclusionStrategies(new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes f) {
+                // Ignorer les champs dont le nom commence par "arg$" (générés par des lambdas)
+                return f.getName().startsWith("arg$") || f.getDeclaringClass().isSynthetic();
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> clazz) {
+                return false;
+            }
+        }).create();
+        String jsonTree = gson.toJson(instance.getNode());
+
+        // Ouvrir un sélecteur de fichier pour enregistrer le JSON
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Exporter l'arbre en JSON");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers JSON (*.json)", "*.json"));
+
+        // Proposer un nom par défaut
+        fileChooser.setInitialFileName("tree_export.json");
+
+        File file = fileChooser.showSaveDialog(null);
+
+        if (file != null) {
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(jsonTree);
+                System.out.println("Arbre exporté avec succès : " + file.getAbsolutePath());
+            } catch (IOException e) {
+                System.err.println("Erreur lors de l'exportation de l'arbre : " + e.getMessage());
+            }
+        } else {
+            System.out.println("Exportation annulée.");
+        }
+    }
+
+    //TODO erreur avec les fonctions lambda
+    public void importTree(ActionEvent actionEvent) {
+        System.out.println("Importer l'arbre en JSON");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Sélectionner un fichier JSON");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers JSON", "*.json"));
+        Stage st = (Stage) menuBar.getScene().getWindow();
+        File selectedFile = fileChooser.showOpenDialog(st);
+        if (selectedFile != null) {
+            try (FileReader reader = new FileReader(selectedFile)) {
+                Gson gson = new GsonBuilder()
+                        .setExclusionStrategies(new ExclusionStrategy() {
+                            @Override
+                            public boolean shouldSkipField(FieldAttributes f) {
+                                // Exclure le champ "nodeAction" pour éviter les problèmes liés aux lambdas
+                                return f.getName().equals("nodeAction");
+                            }
+
+                            @Override
+                            public boolean shouldSkipClass(Class<?> clazz) {
+                                return false;
+                            }
+                        }).setExclusionStrategies(new ExclusionStrategy() {
+                            @Override
+                            public boolean shouldSkipField(FieldAttributes f) {
+                                // Si le champ appartient à la classe javafx.scene.text.Text et qu'il s'appelle "layout", on l'exclut.
+                                if (f.getDeclaringClass().equals(javafx.scene.text.Text.class) && f.getName().equals("layout")) {
+                                    return true;
+                                }
+                                return false;
+                            }
+                            @Override
+                            public boolean shouldSkipClass(Class<?> clazz) {
+                                return false;
+                            }
+                        })
+                        .create();
+                TreeVisual importedTree = gson.fromJson(reader, TreeVisual.class);
+                System.out.println("Arbre importé avec succès !");
+                // Ici, tu peux mettre à jour ton interface avec l'arbre importé
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Aucun fichier sélectionné.");
         }
     }
 }

@@ -328,7 +328,7 @@ public class TreeVisual {
     public  Rectangle drawNodeRecur(Group g, Tree.PositionedNode<String> root, double center, int depth, Text nLabel) {
         double absolute = center + root.position;
         Gson gson = new Gson();
-        NodeInfoData info= null;
+        //NodeInfoData info= null;
 
         Rectangle r = createRectangle(400 + absolute * 40, 50 + depth * 50, root.type, root.nodeId);
         styleLabel(nLabel, absolute, depth, root.label, root.position, root.children.size());
@@ -362,14 +362,14 @@ public class TreeVisual {
         if (depth > this.legendStats.get(3)) {
             this.setLegendStats(3, depth);
         }
-        info = gson.fromJson(root.info, new TypeToken<NodeInfoData>(){}.getType());
+        /*info = gson.fromJson(root.info, new TypeToken<NodeInfoData>(){}.getType());
         if (info != null) {
             String nodeID = UUID.randomUUID().toString();
             this.allNodesPositions.put(nodeID, root);
             this.allNodesRects.put(nodeID, r);
         }
         info = null;
-        gson = null;
+        gson = null;*/
         return r;
     }
 
