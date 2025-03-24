@@ -6,10 +6,10 @@ module org.uclouvain.visualsearchtree {
     requires jmh.core;
 
 
+    opens org.uclouvain.visualsearchtree.tree to com.google.gson, javafx.fxml;
     opens org.uclouvain.visualsearchtree to javafx.fxml;
     exports org.uclouvain.visualsearchtree;
     exports org.uclouvain.visualsearchtree.tree;
-    opens org.uclouvain.visualsearchtree.tree to javafx.fxml;
     exports org.uclouvain.visualsearchtree.bridge;
     opens org.uclouvain.visualsearchtree.bridge to javafx.fxml;
     exports org.uclouvain.visualsearchtree.server;
