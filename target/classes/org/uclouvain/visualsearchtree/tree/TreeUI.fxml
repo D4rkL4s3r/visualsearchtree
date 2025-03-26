@@ -31,6 +31,10 @@
          <SeparatorMenuItem />
          <MenuItem fx:id="closeMenu" onAction="#closeWindow" text="Exit" />
       </Menu>
+      <Menu text="Tree">
+         <MenuItem fx:id="exportTree" onAction="#exportTree" text="Export tree" />
+         <MenuItem fx:id="importTree" onAction="#importTree" text="Import tree" />
+      </Menu>
       <Menu text="Help">
          <MenuItem disable="true" text="Search" />
          <MenuItem text="Help" visible="false" />

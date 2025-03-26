@@ -10,19 +10,19 @@ public class TreeGenerator {
     public int depth;
 
     /**
-     * Génère récursivement un arbre aléatoire.
+     * Génère récursivement un arbre balancé.
      *
      * @param depth la profondeur actuelle (commence à 0)
      * @return un nœud racine du sous-arbre généré
      */
-    public static Tree.Node<String> generateTree(long max_depth, long depth) {
+    public static Tree.Node<String> generateBalancedTree(long max_depth, long depth) {
         int nChildren = (depth < max_depth) ? 2 : 0;
         List<Tree.Node<String>> children = new ArrayList<>();
         //List<String> labels = new ArrayList<>();
 
         // Créer récursivement les enfants
         for (int i = 0; i < nChildren; i++) {
-            children.add(generateTree(max_depth, depth+1));
+            children.add(generateBalancedTree(max_depth, depth+1));
             //labels.add("Child " + i);
         }
 
@@ -31,20 +31,35 @@ public class TreeGenerator {
         return new Tree.Node<>("", "", children, null, () -> {});
     }
 
+    public static Tree.Node<String> generateDegeneratedTree(long maxNodes, long currentNodes) {
+        List<Tree.Node<String>> children = new ArrayList<>();
+
+        // Si le nombre actuel de nœuds est inférieur au nombre maximum souhaité,
+        // ajouter un seul enfant.
+        if (currentNodes < maxNodes) {
+            children.add(generateDegeneratedTree(maxNodes, currentNodes + 1));
+        }
+
+        // Utilisation d'un constructeur de Tree.Node qui accepte un label, une info,
+        // la liste des enfants, les étiquettes des arcs (ici null) et une action (ici une action vide).
+        return new Tree.Node<>("", "", children, null, () -> {});
+    }
+
+
     /**
      * Génère récursivement un arbre aléatoire.
      *
      * @param depth la profondeur actuelle (commence à 0)
      * @return un nœud racine du sous-arbre généré
      */
-    public static OldTree.Node<String> generateOldtree(long max_depth, long depth) {
+    public static OldTree.Node<String> generateBalancedOldtree(long max_depth, long depth) {
         int nChildren = (depth < max_depth) ? 2 : 0;
         List<OldTree.Node<String>> children = new ArrayList<>();
         //List<String> labels = new ArrayList<>();
 
         // Créer récursivement les enfants
         for (int i = 0; i < nChildren; i++) {
-            children.add(generateOldtree(max_depth, depth + 1));
+            children.add(generateBalancedOldtree(max_depth, depth + 1));
             //labels.add("Child " + i);
         }
 
@@ -53,11 +68,25 @@ public class TreeGenerator {
         return new OldTree.Node<>("", "", children, null, () -> {});
     }
 
+    public static OldTree.Node<String> generateDegeneratedOldTree(long maxNodes, long currentNodes) {
+        List<OldTree.Node<String>> children = new ArrayList<>();
+
+        // Si le nombre actuel de nœuds est inférieur au nombre maximum souhaité,
+        // ajouter un seul enfant.
+        if (currentNodes < maxNodes) {
+            children.add(generateDegeneratedOldTree(maxNodes, currentNodes + 1));
+        }
+
+        // Utilisation d'un constructeur de Tree.Node qui accepte un label, une info,
+        // la liste des enfants, les étiquettes des arcs (ici null) et une action (ici une action vide).
+        return new OldTree.Node<>("", "", children, null, () -> {});
+    }
+
     /**
      * Méthode de test pour afficher l'arbre généré dans la console.
      */
     public static void main(String[] args) {
-        Tree.Node<String> root = generateTree(10, 2);
+        Tree.Node<String> root = generateBalancedTree(10, 2);
         printTree(root, 0);
     }
 

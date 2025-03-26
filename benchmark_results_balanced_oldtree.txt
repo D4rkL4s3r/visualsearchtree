@@ -1,0 +1,168 @@
+Benchmarking BalancedOldTree.design() with max_depth: 5, depth: 0
+Iteration 1: 759100 ns
+Iteration 2: 648900 ns
+Iteration 3: 189600 ns
+Iteration 4: 349900 ns
+Iteration 5: 191000 ns
+Average time for BalancedOldTree.design() at depth 5: 427700 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 6, depth: 0
+Iteration 1: 327400 ns
+Iteration 2: 212100 ns
+Iteration 3: 234300 ns
+Iteration 4: 437200 ns
+Iteration 5: 209300 ns
+Average time for BalancedOldTree.design() at depth 6: 284060 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 7, depth: 0
+Iteration 1: 569000 ns
+Iteration 2: 376400 ns
+Iteration 3: 538000 ns
+Iteration 4: 382000 ns
+Iteration 5: 427500 ns
+Average time for BalancedOldTree.design() at depth 7: 458580 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 8, depth: 0
+Iteration 1: 582400 ns
+Iteration 2: 6986800 ns
+Iteration 3: 504100 ns
+Iteration 4: 450100 ns
+Iteration 5: 838800 ns
+Average time for BalancedOldTree.design() at depth 8: 1872440 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 9, depth: 0
+Iteration 1: 1189700 ns
+Iteration 2: 1080600 ns
+Iteration 3: 983700 ns
+Iteration 4: 1339500 ns
+Iteration 5: 3232400 ns
+Average time for BalancedOldTree.design() at depth 9: 1565180 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 10, depth: 0
+Iteration 1: 1429800 ns
+Iteration 2: 1343400 ns
+Iteration 3: 1329400 ns
+Iteration 4: 1369500 ns
+Iteration 5: 2006200 ns
+Average time for BalancedOldTree.design() at depth 10: 1495660 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 11, depth: 0
+Iteration 1: 4218900 ns
+Iteration 2: 4355200 ns
+Iteration 3: 5518600 ns
+Iteration 4: 4998500 ns
+Iteration 5: 4219200 ns
+Average time for BalancedOldTree.design() at depth 11: 4662080 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 12, depth: 0
+Iteration 1: 8624600 ns
+Iteration 2: 8895500 ns
+Iteration 3: 8187700 ns
+Iteration 4: 7657100 ns
+Iteration 5: 8135700 ns
+Average time for BalancedOldTree.design() at depth 12: 8300120 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 13, depth: 0
+Iteration 1: 9998800 ns
+Iteration 2: 8872000 ns
+Iteration 3: 8373000 ns
+Iteration 4: 7627100 ns
+Iteration 5: 10039800 ns
+Average time for BalancedOldTree.design() at depth 13: 8982140 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 14, depth: 0
+Iteration 1: 16753400 ns
+Iteration 2: 16762800 ns
+Iteration 3: 29120700 ns
+Iteration 4: 25218400 ns
+Iteration 5: 18226700 ns
+Average time for BalancedOldTree.design() at depth 14: 21216400 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 15, depth: 0
+Iteration 1: 28176600 ns
+Iteration 2: 38560800 ns
+Iteration 3: 46977400 ns
+Iteration 4: 27393300 ns
+Iteration 5: 30359900 ns
+Average time for BalancedOldTree.design() at depth 15: 34293600 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 16, depth: 0
+Iteration 1: 89462700 ns
+Iteration 2: 60969000 ns
+Iteration 3: 56135900 ns
+Iteration 4: 62083400 ns
+Iteration 5: 57060800 ns
+Average time for BalancedOldTree.design() at depth 16: 65142360 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 17, depth: 0
+Iteration 1: 172127100 ns
+Iteration 2: 121812200 ns
+Iteration 3: 126486300 ns
+Iteration 4: 125080100 ns
+Iteration 5: 108211400 ns
+Average time for BalancedOldTree.design() at depth 17: 130743420 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 18, depth: 0
+Iteration 1: 267003300 ns
+Iteration 2: 244745500 ns
+Iteration 3: 216963600 ns
+Iteration 4: 229809800 ns
+Iteration 5: 346223500 ns
+Average time for BalancedOldTree.design() at depth 18: 260949140 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 19, depth: 0
+Iteration 1: 547290400 ns
+Iteration 2: 533756000 ns
+Iteration 3: 666888600 ns
+Iteration 4: 594367000 ns
+Iteration 5: 442518800 ns
+Average time for BalancedOldTree.design() at depth 19: 556964160 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 20, depth: 0
+Iteration 1: 1223574000 ns
+Iteration 2: 1080110000 ns
+Iteration 3: 1023359800 ns
+Iteration 4: 949531700 ns
+Iteration 5: 923204300 ns
+Average time for BalancedOldTree.design() at depth 20: 1039955960 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 21, depth: 0
+Iteration 1: 2291868500 ns
+Iteration 2: 1904182800 ns
+Iteration 3: 2114689600 ns
+Iteration 4: 2123463500 ns
+Iteration 5: 2042292500 ns
+Average time for BalancedOldTree.design() at depth 21: 2095299380 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 22, depth: 0
+Iteration 1: 4795107600 ns
+Iteration 2: 4856267100 ns
+Iteration 3: 4136312500 ns
+Iteration 4: 4467621000 ns
+Iteration 5: 4636830100 ns
+Average time for BalancedOldTree.design() at depth 22: 4578427660 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 23, depth: 0
+Iteration 1: 9446722200 ns
+Iteration 2: 8623921700 ns
+Iteration 3: 8424120100 ns
+Iteration 4: 8315730600 ns
+Iteration 5: 8424734600 ns
+Average time for BalancedOldTree.design() at depth 23: 8647045840 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 24, depth: 0
+Iteration 1: 17800012200 ns
+Iteration 2: 17677684400 ns
+Iteration 3: 19486018500 ns
+Iteration 4: 16938379700 ns
+Iteration 5: 17544699900 ns
+Average time for BalancedOldTree.design() at depth 24: 17889358940 ns
+------------------------------------------------------
+Benchmarking BalancedOldTree.design() with max_depth: 25, depth: 0
+Iteration 1: 39083503800 ns
+Iteration 2: 37135315100 ns
+Iteration 3: 37588396300 ns
+Iteration 4: 37470825600 ns
+Iteration 5: 37220505400 ns
+Average time for BalancedOldTree.design() at depth 25: 37699709240 ns
+------------------------------------------------------

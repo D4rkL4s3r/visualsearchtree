@@ -178,11 +178,23 @@ public class Tree {
         /**
          * La méthode design construit récursivement la disposition de l'arbre et renvoie un PositionedNode.
          */
+        /**
+         * Lance l'algorithme de Reingold–Tilford pour calculer la disposition finale de l'arbre.
+         * Cette méthode réalise une première passe (design_) pour positionner les nœuds relativement
+         * puis une deuxième passe (secondWalk) pour appliquer les offsets cumulés.
+         */
         public PositionedNode<T> design() {
-            Pair<PositionedNode<T>, Extent> res = design_();
-            return res.left();
+            // Première passe : construction du tree préliminaire et calcul de l'étendue
+            Pair<PositionedNode<T>, Extent> preliminary = design_();
+            // Seconde passe : ajustement des positions finales en appliquant les offsets
+            PositionedNode<T> finalTree = secondWalk(preliminary.left(), 0);
+            return finalTree;
         }
 
+        /**
+         * Première passe (design_) : construit récursivement l'arbre positionné et calcule l'Extent.
+         * Cette méthode est déjà présente dans votre code et utilise les méthodes Extent.fitList et merge.
+         */
         private Pair<PositionedNode<T>, Extent> design_() {
             List<PositionedNode<T>> subtrees = new LinkedList<>();
             List<Extent> subtreeExtents = new LinkedList<>();
@@ -209,11 +221,30 @@ public class Tree {
 
             // Fusion des extents des sous-arbres
             Extent resExtent = Extent.merge(extentsMoved);
-            // Ajout de l'extent du nœud courant, en tenant compte de sa largeur
+            // Ajout de l'extent du nœud courant, en tenant compte de sa largeur (nodeWidth)
             resExtent.addFirst(-nodeWidth / 2, nodeWidth / 2);
+            // Le nœud courant est initialisé avec une position préliminaire à 0
             PositionedNode<T> resTree = new PositionedNode<>(nodeId, label, type, subtreesMoved, edgeLabels, nodeAction, 0, info);
             return new Pair<>(resTree, resExtent);
         }
+
+        /**
+         * Deuxième passe (secondWalk) : applique récursivement l'offset cumulé pour fixer les positions finales.
+         * @param node Le PositionedNode à ajuster
+         * @param offset L'offset cumulé jusqu'à présent
+         * @return Le PositionedNode avec sa position finale corrigée
+         */
+        private PositionedNode<T> secondWalk(PositionedNode<T> node, double offset) {
+            // Applique l'offset courant à la position du nœud
+            double finalPos = node.position + offset;
+            // Reconstruire le nœud avec la position finale
+            List<PositionedNode<T>> finalChildren = new LinkedList<>();
+            for (PositionedNode<T> child : node.children) {
+                finalChildren.add(secondWalk(child, offset));
+            }
+            return new PositionedNode<>(node.nodeId, node.label, node.type, finalChildren, node.edgeLabels, node.nodeAction, finalPos, node.info);
+        }
+
 
         public void addChildren(Node<T> newChild) {
             children.add(newChild);
