@@ -2,17 +2,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def parse_file(filename):
-    """
-    Lit le fichier de benchmark et extrait pour chaque bloc la valeur utilisée (max_depth ou max_nodes)
-    et le temps moyen (en ns).
-    
-    On s'attend à trouver dans le fichier des lignes de la forme :
-      "Benchmarking ... with max_depth: <value>, depth: <...>"
-    ou
-      "Benchmarking ... with max_nodes: <value>, depth: <...>"
-    et
-      "Average time for ... at depth <...>: <average_time> ns"
-    """
     xs = []
     average_times = []
     current_x = None
@@ -44,118 +33,126 @@ def parse_file(filename):
                         continue
     return xs, average_times
 
-def plot_balanced():
-    # Fichiers pour arbres équilibrés
+def get_balanced_data():
     file_tree = "benchmark_results_balanced_tree.txt"
     file_oldtree = "benchmark_results_balanced_oldtree.txt"
     
     max_depths_tree, avg_times_tree = parse_file(file_tree)
     max_depths_oldtree, avg_times_oldtree = parse_file(file_oldtree)
     
-    # Tri des données par max_depth
     data_tree = sorted(zip(max_depths_tree, avg_times_tree))
     data_oldtree = sorted(zip(max_depths_oldtree, avg_times_oldtree))
     max_depths_tree, avg_times_tree = zip(*data_tree)
     max_depths_oldtree, avg_times_oldtree = zip(*data_oldtree)
     
-    # Conversion de max_depth en nombre de nœuds pour les arbres équilibrés: n = 2^(d+1)-1
     nodes_tree = [2**(d+1)-1 for d in max_depths_tree]
     nodes_oldtree = [2**(d+1)-1 for d in max_depths_oldtree]
     
-    # Conversion des temps de ns en µs (1 µs = 1e3 ns)
     times_tree = [t / 1e3 for t in avg_times_tree]
     times_oldtree = [t / 1e3 for t in avg_times_oldtree]
     
-    # Régression polynomiale de degré 2 pour chaque série
-    degree = 2
-    coef_tree = np.polyfit(nodes_tree, times_tree, degree)
-    poly_tree = np.poly1d(coef_tree)
-    fitted_tree = poly_tree(nodes_tree)
-    
-    coef_oldtree = np.polyfit(nodes_oldtree, times_oldtree, degree)
-    poly_oldtree = np.poly1d(coef_oldtree)
-    fitted_oldtree = poly_oldtree(nodes_oldtree)
-    
-    # Affichage des équations dans la console
-    print("Balanced Tree.design() - équation ajustée (degré 2) :")
-    print(poly_tree)
-    print("Balanced OldTree.design() - équation ajustée (degré 2) :")
-    print(poly_oldtree)
-    
-    # Tracé du graphique
-    plt.figure(figsize=(10, 6))
-    plt.plot(nodes_tree, times_tree, marker='o', linestyle='-', label='Balanced Tree.design()')
-    plt.plot(nodes_tree, fitted_tree, 'r--', label='Ajustement Tree (deg2)')
-    plt.plot(nodes_oldtree, times_oldtree, marker='s', linestyle='-', label='Balanced OldTree.design()')
-    plt.plot(nodes_oldtree, fitted_oldtree, 'b--', label='Ajustement OldTree (deg2)')
-    
-    plt.xlim(left=0)
-    plt.ylim(bottom=0)
-    plt.ticklabel_format(style='plain', axis='both')
-    plt.xlabel('Nombre de nœuds')
-    plt.ylabel('Temps moyen (µs)')
-    plt.title('Benchmark Balanced Trees')
-    plt.legend()
-    plt.grid(True, which="both", ls="--", lw=0.5)
-    plt.tight_layout()
-    plt.savefig("benchmark_results_balanced.png")
-    plt.show()
+    return nodes_tree, times_tree, nodes_oldtree, times_oldtree
 
-def plot_degenerated():
-    # Fichiers pour arbres dégénérés
+def get_degenerated_data():
     file_tree = "benchmark_results_degenerated_tree.txt"
     file_oldtree = "benchmark_results_degenerated_oldtree.txt"
     
-    xs_tree, avg_times_tree = parse_file(file_tree)
-    xs_oldtree, avg_times_oldtree = parse_file(file_oldtree)
+    nodes_tree, avg_times_tree = parse_file(file_tree)
+    nodes_oldtree, avg_times_oldtree = parse_file(file_oldtree)
     
-    # Ici, xs représentent directement le nombre de nœuds.
-    nodes_tree = xs_tree
-    nodes_oldtree = xs_oldtree
-    
-    # Conversion des temps de ns en µs
     times_tree = [t / 1e3 for t in avg_times_tree]
     times_oldtree = [t / 1e3 for t in avg_times_oldtree]
     
-    # Régression polynomiale de degré 2 pour chaque série
-    degree = 2
+    return nodes_tree, times_tree, nodes_oldtree, times_oldtree
+
+def get_polynomial_fits(nodes_tree, times_tree, nodes_oldtree, times_oldtree, degree=2):
     coef_tree = np.polyfit(nodes_tree, times_tree, degree)
     poly_tree = np.poly1d(coef_tree)
     fitted_tree = poly_tree(nodes_tree)
-    
+
     coef_oldtree = np.polyfit(nodes_oldtree, times_oldtree, degree)
     poly_oldtree = np.poly1d(coef_oldtree)
     fitted_oldtree = poly_oldtree(nodes_oldtree)
+
+    return fitted_tree, fitted_oldtree, poly_tree, poly_oldtree
+
+def plot_balanced_data():
+    nodes_tree, times_tree, nodes_oldtree, times_oldtree = get_balanced_data()
     
-    # Affichage des équations dans la console
-    print("Degenerated Tree.design() - équation ajustée (degré 2) :")
-    print(poly_tree)
-    print("Degenerated OldTree.design() - équation ajustée (degré 2) :")
-    print(poly_oldtree)
-    
-    # Tracé du graphique : points et courbes ajustées en pointillé
     plt.figure(figsize=(10, 6))
-    plt.scatter(nodes_tree, times_tree, marker='o', label='Degenerated Tree.design()')
-    plt.plot(nodes_tree, fitted_tree, 'g--', label='Ajustement Tree (deg2)')
+    plt.plot(nodes_tree, times_tree, color='green', marker='o', linestyle='-', label='Balanced Tree.design()')
+    plt.plot(nodes_oldtree, times_oldtree, color='orange', marker='s', linestyle='-', label='Balanced OldTree.design()')
     
-    plt.scatter(nodes_oldtree, times_oldtree, marker='s', label='Degenerated OldTree.design()')
-    plt.plot(nodes_oldtree, fitted_oldtree, 'm--', label='Ajustement OldTree (deg2)')
-    
-    plt.xlim(left=0)
-    plt.ylim(bottom=0)
-    plt.ticklabel_format(style='plain', axis='both')
     plt.xlabel('Nombre de nœuds')
     plt.ylabel('Temps moyen (µs)')
-    plt.title('Benchmark Degenerated Trees')
+    plt.title('Données Mesurées - Balanced Trees')
     plt.legend()
-    plt.grid(True, which="both", ls="--", lw=0.5)
-    plt.tight_layout()
-    plt.savefig("benchmark_results_degenerated.png")
+    plt.grid(True, linestyle="--", linewidth=0.5)
+    plt.savefig("benchmark_results_balanced_data.png")
+    plt.show()
+
+def plot_balanced_fitted():
+    nodes_tree, times_tree, nodes_oldtree, times_oldtree = get_balanced_data()
+    fitted_tree, fitted_oldtree, poly_tree, poly_oldtree = get_polynomial_fits(nodes_tree, times_tree, nodes_oldtree, times_oldtree)
+
+    print("Balanced Tree.design() - équation ajustée :")
+    print(poly_tree)
+    print("Balanced OldTree.design() - équation ajustée :")
+    print(poly_oldtree)
+    
+    plt.figure(figsize=(10, 6))
+    plt.plot(nodes_tree, fitted_tree, color='green', linestyle='--', linewidth=2, label='Ajustement Tree (deg2)')
+    plt.plot(nodes_oldtree, fitted_oldtree, color='orange', linestyle='--', linewidth=2, label='Ajustement OldTree (deg2)')
+    
+    plt.xlabel('Nombre de nœuds')
+    plt.ylabel('Temps moyen (µs)')
+    plt.title('Courbes Ajustées - Balanced Trees')
+    plt.legend()
+    plt.grid(True, linestyle="--", linewidth=0.5)
+    plt.savefig("benchmark_results_balanced_fitted.png")
+    plt.show()
+
+def plot_degenerated_data():
+    nodes_tree, times_tree, nodes_oldtree, times_oldtree = get_degenerated_data()
+    
+    plt.figure(figsize=(10, 6))
+    plt.scatter(nodes_tree, times_tree, color='blue', marker='o', label='Degenerated Tree.design()')
+    plt.scatter(nodes_oldtree, times_oldtree, color='red', marker='s', label='Degenerated OldTree.design()')
+    
+    plt.xlabel('Nombre de nœuds')
+    plt.ylabel('Temps moyen (ms)')
+    plt.title('Données Mesurées - Degenerated Trees')
+    plt.legend()
+    plt.grid(True, linestyle="--", linewidth=0.5)
+    plt.savefig("benchmark_results_degenerated_data.png")
+    plt.show()
+
+def plot_degenerated_fitted():
+    nodes_tree, times_tree, nodes_oldtree, times_oldtree = get_degenerated_data()
+    fitted_tree, fitted_oldtree, poly_tree, poly_oldtree = get_polynomial_fits(nodes_tree, times_tree, nodes_oldtree, times_oldtree)
+
+    print("Degenerated Tree.design() - équation ajustée :")
+    print(poly_tree)
+    print("Degenerated OldTree.design() - équation ajustée :")
+    print(poly_oldtree)
+    
+    plt.figure(figsize=(10, 6))
+    plt.plot(nodes_tree, fitted_tree, color='blue', linestyle='--', linewidth=2, label='Ajustement Tree (deg2)')
+    plt.plot(nodes_oldtree, fitted_oldtree, color='red', linestyle='--', linewidth=2, label='Ajustement OldTree (deg2)')
+    
+    plt.xlabel('Nombre de nœuds')
+    plt.ylabel('Temps moyen (µs)')
+    plt.title('Courbes Ajustées - Degenerated Trees')
+    plt.legend()
+    plt.grid(True, linestyle="--", linewidth=0.5)
+    plt.savefig("benchmark_results_degenerated_fitted.png")
     plt.show()
 
 def main():
-    plot_balanced()
-    plot_degenerated()
+    plot_balanced_data()
+    plot_balanced_fitted()
+    plot_degenerated_data()
+    plot_degenerated_fitted()
 
 if __name__ == '__main__':
     main()

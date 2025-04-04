@@ -1,160 +1,160 @@
 Benchmarking DegeneratedTree.design() with max_depth: 5000, depth: 0
-Iteration 1: 516850300 ns
-Iteration 2: 481557900 ns
-Iteration 3: 457065000 ns
-Iteration 4: 417247900 ns
-Iteration 5: 415793100 ns
-Average time for DegeneratedTree.design() at max_nodes 5000: 457702840 ns
+Iteration 1: 3601700 ns
+Iteration 2: 3608800 ns
+Iteration 3: 2591400 ns
+Iteration 4: 2842700 ns
+Iteration 5: 6635200 ns
+Average time for DegeneratedTree.design() at max_nodes 5000: 3855960 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 10000, depth: 0
-Iteration 1: 1770113000 ns
-Iteration 2: 1667622200 ns
-Iteration 3: 1667706700 ns
-Iteration 4: 1683216800 ns
-Iteration 5: 1675841100 ns
-Average time for DegeneratedTree.design() at max_nodes 10000: 1692899960 ns
+Iteration 1: 3925600 ns
+Iteration 2: 4935700 ns
+Iteration 3: 5239300 ns
+Iteration 4: 4989900 ns
+Iteration 5: 4791100 ns
+Average time for DegeneratedTree.design() at max_nodes 10000: 4776320 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 15000, depth: 0
-Iteration 1: 4198438700 ns
-Iteration 2: 3899640200 ns
-Iteration 3: 3768182500 ns
-Iteration 4: 3770056600 ns
-Iteration 5: 3725725900 ns
-Average time for DegeneratedTree.design() at max_nodes 15000: 3872408780 ns
+Iteration 1: 7814200 ns
+Iteration 2: 7926100 ns
+Iteration 3: 7866200 ns
+Iteration 4: 7903100 ns
+Iteration 5: 8040800 ns
+Average time for DegeneratedTree.design() at max_nodes 15000: 7910080 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 20000, depth: 0
-Iteration 1: 6792180100 ns
-Iteration 2: 6827898200 ns
-Iteration 3: 6774228600 ns
-Iteration 4: 6789696800 ns
-Iteration 5: 6793655300 ns
-Average time for DegeneratedTree.design() at max_nodes 20000: 6795531800 ns
+Iteration 1: 10238900 ns
+Iteration 2: 10232600 ns
+Iteration 3: 23104600 ns
+Iteration 4: 8271200 ns
+Iteration 5: 3787800 ns
+Average time for DegeneratedTree.design() at max_nodes 20000: 11127020 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 25000, depth: 0
-Iteration 1: 19308172300 ns
-Iteration 2: 22506305400 ns
-Iteration 3: 21021523500 ns
-Iteration 4: 20263386400 ns
-Iteration 5: 20817234700 ns
-Average time for DegeneratedTree.design() at max_nodes 25000: 20783324460 ns
+Iteration 1: 4206500 ns
+Iteration 2: 4250400 ns
+Iteration 3: 3802500 ns
+Iteration 4: 5262000 ns
+Iteration 5: 5103000 ns
+Average time for DegeneratedTree.design() at max_nodes 25000: 4524880 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 30000, depth: 0
-Iteration 1: 17701950800 ns
-Iteration 2: 30914289000 ns
-Iteration 3: 29965112100 ns
-Iteration 4: 29666610200 ns
-Iteration 5: 29520510000 ns
-Average time for DegeneratedTree.design() at max_nodes 30000: 27553694420 ns
+Iteration 1: 4712400 ns
+Iteration 2: 28744800 ns
+Iteration 3: 4728400 ns
+Iteration 4: 4530300 ns
+Iteration 5: 5325400 ns
+Average time for DegeneratedTree.design() at max_nodes 30000: 9608260 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 35000, depth: 0
-Iteration 1: 40435870000 ns
-Iteration 2: 41337013500 ns
-Iteration 3: 43112648700 ns
-Iteration 4: 44717595500 ns
-Iteration 5: 42296685600 ns
-Average time for DegeneratedTree.design() at max_nodes 35000: 42379962660 ns
+Iteration 1: 5394800 ns
+Iteration 2: 5549100 ns
+Iteration 3: 5191300 ns
+Iteration 4: 30121000 ns
+Iteration 5: 10576800 ns
+Average time for DegeneratedTree.design() at max_nodes 35000: 11366600 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 40000, depth: 0
-Iteration 1: 54514752500 ns
-Iteration 2: 40699874500 ns
-Iteration 3: 54719371100 ns
-Iteration 4: 54004784800 ns
-Iteration 5: 54239016600 ns
-Average time for DegeneratedTree.design() at max_nodes 40000: 51635559900 ns
+Iteration 1: 12277300 ns
+Iteration 2: 12002100 ns
+Iteration 3: 12151200 ns
+Iteration 4: 12362000 ns
+Iteration 5: 12269500 ns
+Average time for DegeneratedTree.design() at max_nodes 40000: 12212420 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 45000, depth: 0
-Iteration 1: 60990737400 ns
-Iteration 2: 72056756800 ns
-Iteration 3: 69341585700 ns
-Iteration 4: 66564407800 ns
-Iteration 5: 69721924800 ns
-Average time for DegeneratedTree.design() at max_nodes 45000: 67735082500 ns
+Iteration 1: 13077700 ns
+Iteration 2: 12975200 ns
+Iteration 3: 13170900 ns
+Iteration 4: 13990000 ns
+Iteration 5: 36585500 ns
+Average time for DegeneratedTree.design() at max_nodes 45000: 17959860 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 50000, depth: 0
-Iteration 1: 81027843000 ns
-Iteration 2: 83843129100 ns
-Iteration 3: 88570044600 ns
-Iteration 4: 71395669100 ns
-Iteration 5: 85259344800 ns
-Average time for DegeneratedTree.design() at max_nodes 50000: 82019206120 ns
+Iteration 1: 8483900 ns
+Iteration 2: 8028700 ns
+Iteration 3: 8864600 ns
+Iteration 4: 7981000 ns
+Iteration 5: 8110600 ns
+Average time for DegeneratedTree.design() at max_nodes 50000: 8293760 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 55000, depth: 0
-Iteration 1: 95117217300 ns
-Iteration 2: 104776784900 ns
-Iteration 3: 105028655500 ns
-Iteration 4: 98776585600 ns
-Iteration 5: 134962421100 ns
-Average time for DegeneratedTree.design() at max_nodes 55000: 107732332880 ns
+Iteration 1: 9418000 ns
+Iteration 2: 9207500 ns
+Iteration 3: 8814000 ns
+Iteration 4: 32178000 ns
+Iteration 5: 9699000 ns
+Average time for DegeneratedTree.design() at max_nodes 55000: 13863300 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 60000, depth: 0
-Iteration 1: 160610233800 ns
-Iteration 2: 132301470000 ns
-Iteration 3: 124954777800 ns
-Iteration 4: 125494463700 ns
-Iteration 5: 125139085500 ns
-Average time for DegeneratedTree.design() at max_nodes 60000: 133700006160 ns
+Iteration 1: 10215700 ns
+Iteration 2: 9663700 ns
+Iteration 3: 9652300 ns
+Iteration 4: 10859200 ns
+Iteration 5: 12309500 ns
+Average time for DegeneratedTree.design() at max_nodes 60000: 10540080 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 65000, depth: 0
-Iteration 1: 147592446700 ns
-Iteration 2: 147238758500 ns
-Iteration 3: 145666614100 ns
-Iteration 4: 145363612700 ns
-Iteration 5: 145488309400 ns
-Average time for DegeneratedTree.design() at max_nodes 65000: 146269948280 ns
+Iteration 1: 49923000 ns
+Iteration 2: 12239500 ns
+Iteration 3: 12364000 ns
+Iteration 4: 11840100 ns
+Iteration 5: 11184300 ns
+Average time for DegeneratedTree.design() at max_nodes 65000: 19510180 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 70000, depth: 0
-Iteration 1: 169104235600 ns
-Iteration 2: 163222673400 ns
-Iteration 3: 169894639400 ns
-Iteration 4: 161236714500 ns
-Iteration 5: 157764977800 ns
-Average time for DegeneratedTree.design() at max_nodes 70000: 164244648140 ns
+Iteration 1: 12374900 ns
+Iteration 2: 11846700 ns
+Iteration 3: 11639700 ns
+Iteration 4: 66066300 ns
+Iteration 5: 21190800 ns
+Average time for DegeneratedTree.design() at max_nodes 70000: 24623680 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 75000, depth: 0
-Iteration 1: 196382784700 ns
-Iteration 2: 194439877400 ns
-Iteration 3: 193474933000 ns
-Iteration 4: 196360825300 ns
-Iteration 5: 187494962000 ns
-Average time for DegeneratedTree.design() at max_nodes 75000: 193630676480 ns
+Iteration 1: 22350200 ns
+Iteration 2: 22989300 ns
+Iteration 3: 22807400 ns
+Iteration 4: 22822900 ns
+Iteration 5: 22470600 ns
+Average time for DegeneratedTree.design() at max_nodes 75000: 22688080 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 80000, depth: 0
-Iteration 1: 226514191000 ns
-Iteration 2: 279848768500 ns
-Iteration 3: 305345573800 ns
-Iteration 4: 298038706200 ns
-Iteration 5: 300101888100 ns
-Average time for DegeneratedTree.design() at max_nodes 80000: 281969825520 ns
+Iteration 1: 23820100 ns
+Iteration 2: 24609000 ns
+Iteration 3: 23915200 ns
+Iteration 4: 25864600 ns
+Iteration 5: 34064100 ns
+Average time for DegeneratedTree.design() at max_nodes 80000: 26454600 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 85000, depth: 0
-Iteration 1: 256059502800 ns
-Iteration 2: 245458712800 ns
-Iteration 3: 256870582700 ns
-Iteration 4: 319024168000 ns
-Iteration 5: 298587797000 ns
-Average time for DegeneratedTree.design() at max_nodes 85000: 275200152660 ns
+Iteration 1: 26052800 ns
+Iteration 2: 26344600 ns
+Iteration 3: 25282800 ns
+Iteration 4: 26503100 ns
+Iteration 5: 65154800 ns
+Average time for DegeneratedTree.design() at max_nodes 85000: 33867620 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 90000, depth: 0
-Iteration 1: 284130220700 ns
-Iteration 2: 286552311000 ns
-Iteration 3: 276924459000 ns
-Iteration 4: 285574497800 ns
-Iteration 5: 280753253500 ns
-Average time for DegeneratedTree.design() at max_nodes 90000: 282786948400 ns
+Iteration 1: 14627200 ns
+Iteration 2: 14587200 ns
+Iteration 3: 15502900 ns
+Iteration 4: 16527600 ns
+Iteration 5: 16257500 ns
+Average time for DegeneratedTree.design() at max_nodes 90000: 15500480 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 95000, depth: 0
-Iteration 1: 316943114700 ns
-Iteration 2: 316004489200 ns
-Iteration 3: 316438095800 ns
-Iteration 4: 309981373200 ns
-Iteration 5: 310915212400 ns
-Average time for DegeneratedTree.design() at max_nodes 95000: 314056457060 ns
+Iteration 1: 16234700 ns
+Iteration 2: 15795100 ns
+Iteration 3: 16576200 ns
+Iteration 4: 16652200 ns
+Iteration 5: 18147300 ns
+Average time for DegeneratedTree.design() at max_nodes 95000: 16681100 ns
 ------------------------------------------------------
 Benchmarking DegeneratedTree.design() with max_depth: 100000, depth: 0
-Iteration 1: 354943082300 ns
-Iteration 2: 348522277500 ns
-Iteration 3: 351095830600 ns
-Iteration 4: 344319859400 ns
-Iteration 5: 342556059900 ns
-Average time for DegeneratedTree.design() at max_nodes 100000: 348287421940 ns
+Iteration 1: 16695500 ns
+Iteration 2: 17087200 ns
+Iteration 3: 77903900 ns
+Iteration 4: 17513900 ns
+Iteration 5: 17228500 ns
+Average time for DegeneratedTree.design() at max_nodes 100000: 29285800 ns
 ------------------------------------------------------

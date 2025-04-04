@@ -1,3 +1,4 @@
+/*
 package org.uclouvain.visualsearchtree.tree;
 
 import java.util.ArrayList;
@@ -18,9 +19,11 @@ public class BenchmarkExtentMoveTest {
             Tree.Extent ext = new Tree.Extent(pairs);
 
             //warm up
-            /*for (int i = 0; i < 100000; i++) {
+            */
+/*for (int i = 0; i < 100000; i++) {
                 ext = ext.move(1.0);
-            }*/
+            }*//*
+
 
             long start = System.nanoTime();
             for (int i = 0; i < iterations; i++) {
@@ -38,3 +41,4 @@ public class BenchmarkExtentMoveTest {
 }
 
 
+*/

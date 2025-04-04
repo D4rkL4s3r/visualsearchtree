@@ -45,6 +45,29 @@ public class TreeGenerator {
         return new Tree.Node<>("", "", children, null, () -> {});
     }
 
+    public static Tree.Node<String> generateMixedTree(long maxDepth, long depth) {
+        if (depth >= maxDepth) {
+            return new Tree.Node<>("", "", new ArrayList<>(), null, () -> {});
+        }
+
+        // Alternance tous les 10 niveaux
+        boolean isBalanced = (depth / 10) % 2 == 0;
+
+        List<Tree.Node<String>> children = new ArrayList<>();
+
+        if (isBalanced) {
+            // Arbre balancé (deux enfants)
+            children.add(generateMixedTree(maxDepth, depth + 1));
+            children.add(generateMixedTree(maxDepth, depth + 1));
+        } else {
+            // Arbre dégénéré (un seul enfant)
+            children.add(generateMixedTree(maxDepth, depth + 1));
+        }
+
+        return new Tree.Node<>("", "", children, null, () -> {});
+    }
+
+
 
     /**
      * Génère récursivement un arbre aléatoire.
@@ -79,6 +102,28 @@ public class TreeGenerator {
 
         // Utilisation d'un constructeur de Tree.Node qui accepte un label, une info,
         // la liste des enfants, les étiquettes des arcs (ici null) et une action (ici une action vide).
+        return new OldTree.Node<>("", "", children, null, () -> {});
+    }
+
+    public static OldTree.Node<String> generateMixedOldTree(long maxDepth, long depth) {
+        if (depth >= maxDepth) {
+            return new OldTree.Node<>("", "", new ArrayList<>(), null, () -> {});
+        }
+
+        // Alternance tous les 10 niveaux
+        boolean isBalanced = (depth / 10) % 2 == 0;
+
+        List<OldTree.Node<String>> children = new ArrayList<>();
+
+        if (isBalanced) {
+            // Arbre balancé (deux enfants)
+            children.add(generateMixedOldTree(maxDepth, depth + 1));
+            children.add(generateMixedOldTree(maxDepth, depth + 1));
+        } else {
+            // Arbre dégénéré (un seul enfant)
+            children.add(generateMixedOldTree(maxDepth, depth + 1));
+        }
+
         return new OldTree.Node<>("", "", children, null, () -> {});
     }
 

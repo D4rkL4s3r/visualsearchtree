@@ -1,0 +1,168 @@
+Benchmarking MixedTree.design() with max_depth: 5, depth: 0
+Iteration 1: 60000 ns
+Iteration 2: 65600 ns
+Iteration 3: 59900 ns
+Iteration 4: 55800 ns
+Iteration 5: 61400 ns
+Average time for MixedTree.design() at depth 5: 60540 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 6, depth: 0
+Iteration 1: 111500 ns
+Iteration 2: 109800 ns
+Iteration 3: 109800 ns
+Iteration 4: 135300 ns
+Iteration 5: 110600 ns
+Average time for MixedTree.design() at depth 6: 115400 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 7, depth: 0
+Iteration 1: 254400 ns
+Iteration 2: 246000 ns
+Iteration 3: 248100 ns
+Iteration 4: 259500 ns
+Iteration 5: 242200 ns
+Average time for MixedTree.design() at depth 7: 250040 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 8, depth: 0
+Iteration 1: 487700 ns
+Iteration 2: 490800 ns
+Iteration 3: 486800 ns
+Iteration 4: 482300 ns
+Iteration 5: 491400 ns
+Average time for MixedTree.design() at depth 8: 487800 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 9, depth: 0
+Iteration 1: 979300 ns
+Iteration 2: 974600 ns
+Iteration 3: 996200 ns
+Iteration 4: 970800 ns
+Iteration 5: 992900 ns
+Average time for MixedTree.design() at depth 9: 982760 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 10, depth: 0
+Iteration 1: 1409300 ns
+Iteration 2: 1415300 ns
+Iteration 3: 1383000 ns
+Iteration 4: 1406100 ns
+Iteration 5: 1348000 ns
+Average time for MixedTree.design() at depth 10: 1392340 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 11, depth: 0
+Iteration 1: 2569300 ns
+Iteration 2: 2442200 ns
+Iteration 3: 2402600 ns
+Iteration 4: 2394900 ns
+Iteration 5: 2476900 ns
+Average time for MixedTree.design() at depth 11: 2457180 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 12, depth: 0
+Iteration 1: 4142300 ns
+Iteration 2: 3762100 ns
+Iteration 3: 3314200 ns
+Iteration 4: 3384700 ns
+Iteration 5: 120041900 ns
+Average time for MixedTree.design() at depth 12: 26929040 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 13, depth: 0
+Iteration 1: 6368400 ns
+Iteration 2: 6394900 ns
+Iteration 3: 6351100 ns
+Iteration 4: 6304900 ns
+Iteration 5: 6306200 ns
+Average time for MixedTree.design() at depth 13: 6345100 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 14, depth: 0
+Iteration 1: 7724300 ns
+Iteration 2: 5648700 ns
+Iteration 3: 8069300 ns
+Iteration 4: 8236700 ns
+Iteration 5: 6312700 ns
+Average time for MixedTree.design() at depth 14: 7198340 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 15, depth: 0
+Iteration 1: 7175500 ns
+Iteration 2: 6607400 ns
+Iteration 3: 6602000 ns
+Iteration 4: 6688400 ns
+Iteration 5: 6650000 ns
+Average time for MixedTree.design() at depth 15: 6744660 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 16, depth: 0
+Iteration 1: 8330600 ns
+Iteration 2: 8864600 ns
+Iteration 3: 8492700 ns
+Iteration 4: 11756200 ns
+Iteration 5: 9685500 ns
+Average time for MixedTree.design() at depth 16: 9425920 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 17, depth: 0
+Iteration 1: 9779300 ns
+Iteration 2: 9671200 ns
+Iteration 3: 9642900 ns
+Iteration 4: 9972300 ns
+Iteration 5: 13273800 ns
+Average time for MixedTree.design() at depth 17: 10467900 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 18, depth: 0
+Iteration 1: 14849800 ns
+Iteration 2: 12356500 ns
+Iteration 3: 12849000 ns
+Iteration 4: 13101900 ns
+Iteration 5: 12346600 ns
+Average time for MixedTree.design() at depth 18: 13100760 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 19, depth: 0
+Iteration 1: 14304300 ns
+Iteration 2: 18625800 ns
+Iteration 3: 21254300 ns
+Iteration 4: 21176600 ns
+Iteration 5: 21407200 ns
+Average time for MixedTree.design() at depth 19: 19353640 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 20, depth: 0
+Iteration 1: 20566200 ns
+Iteration 2: 18236400 ns
+Iteration 3: 16564100 ns
+Iteration 4: 16360700 ns
+Iteration 5: 17584600 ns
+Average time for MixedTree.design() at depth 20: 17862400 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 21, depth: 0
+Iteration 1: 19052400 ns
+Iteration 2: 19224100 ns
+Iteration 3: 19339900 ns
+Iteration 4: 18753200 ns
+Iteration 5: 18995400 ns
+Average time for MixedTree.design() at depth 21: 19073000 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 22, depth: 0
+Iteration 1: 22783900 ns
+Iteration 2: 24019700 ns
+Iteration 3: 22731200 ns
+Iteration 4: 22703200 ns
+Iteration 5: 22589500 ns
+Average time for MixedTree.design() at depth 22: 22965500 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 23, depth: 0
+Iteration 1: 37037600 ns
+Iteration 2: 35708700 ns
+Iteration 3: 27895100 ns
+Iteration 4: 32037400 ns
+Iteration 5: 28513100 ns
+Average time for MixedTree.design() at depth 23: 32238380 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 24, depth: 0
+Iteration 1: 41805200 ns
+Iteration 2: 40976200 ns
+Iteration 3: 54732100 ns
+Iteration 4: 46478600 ns
+Iteration 5: 47068200 ns
+Average time for MixedTree.design() at depth 24: 46212060 ns
+------------------------------------------------------
+Benchmarking MixedTree.design() with max_depth: 25, depth: 0
+Iteration 1: 82643800 ns
+Iteration 2: 73070100 ns
+Iteration 3: 136594300 ns
+Iteration 4: 57917700 ns
+Iteration 5: 63957900 ns
+Average time for MixedTree.design() at depth 25: 82836760 ns
+------------------------------------------------------

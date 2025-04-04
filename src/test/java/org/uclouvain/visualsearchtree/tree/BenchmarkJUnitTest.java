@@ -63,7 +63,7 @@ public class BenchmarkJUnitTest {
         }
     }
 
-    @ParameterizedTest
+   /* @ParameterizedTest
     @CsvSource({
            "5000, 0", //nodes
            "10000, 0",
@@ -110,9 +110,59 @@ public class BenchmarkJUnitTest {
             writer.println("Average time for DegeneratedTree.design() at max_nodes " + max_nodes + ": " + averageTime + " ns");
             writer.println("------------------------------------------------------");
         }
-    }
+    }*/
 
-    @ParameterizedTest
+    /*@ParameterizedTest
+    @CsvSource({
+            "5, 0",
+            "6, 0",
+            "7, 0",
+            "8, 0",
+            "9, 0",
+            "10, 0",
+            "11, 0",
+            "12, 0",
+            "13, 0",
+            "14, 0",
+            "15, 0",
+            "16, 0",
+            "17, 0",
+            "18, 0",
+            "19, 0",
+            "20, 0",
+            "21, 0",
+            "22, 0",
+            "23, 0",
+            "24, 0",
+            "25, 0"
+    })
+    public void benchmarkMixedTreeDesign(long max_depth, long depth) throws IOException {
+        String fileName = "benchmark_results_mixed_tree.txt";
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(fileName, true)))) {
+            writer.println("Benchmarking MixedTree.design() with max_depth: " + max_depth + ", depth: " + depth);
+
+            Tree.Node<String> treeRoot = TreeGenerator.generateMixedTree(max_depth, depth);
+
+            for (int i = 0; i < WARMUP_ITERATIONS; i++) {
+                treeRoot.design();
+            }
+
+            long totalTime = 0;
+            for (int i = 0; i < MEASURE_ITERATIONS; i++) {
+                long startTime = System.nanoTime();
+                Object result = treeRoot.design();
+                long endTime = System.nanoTime();
+                long duration = endTime - startTime;
+                totalTime += duration;
+                writer.println("Iteration " + (i + 1) + ": " + duration + " ns");
+            }
+            long averageTime = totalTime / MEASURE_ITERATIONS;
+            writer.println("Average time for MixedTree.design() at depth " + max_depth + ": " + averageTime + " ns");
+            writer.println("------------------------------------------------------");
+        }
+    }*/
+
+    /*@ParameterizedTest
     @CsvSource({
             "5, 0", // 63 nodes -> 2^(max_depth+1)-1
             "6, 0",
@@ -210,4 +260,54 @@ public class BenchmarkJUnitTest {
             writer.println("------------------------------------------------------");
         }
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "5, 0",
+            "6, 0",
+            "7, 0",
+            "8, 0",
+            "9, 0",
+            "10, 0",
+            "11, 0",
+            "12, 0",
+            "13, 0",
+            "14, 0",
+            "15, 0",
+            "16, 0",
+            "17, 0",
+            "18, 0",
+            "19, 0",
+            "20, 0",
+            "21, 0",
+            "22, 0",
+            "23, 0",
+            "24, 0",
+            "25, 0"
+    })
+    public void benchmarkMixedOldTreeDesign(long max_depth, long depth) throws IOException {
+        String fileName = "benchmark_results_mixed_oldtree.txt";
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(fileName, true)))) {
+            writer.println("Benchmarking MixedOldTree.design() with max_depth: " + max_depth + ", depth: " + depth);
+
+            OldTree.Node<String> oldTreeRoot = TreeGenerator.generateMixedOldTree(max_depth, depth);
+
+            for (int i = 0; i < WARMUP_ITERATIONS; i++) {
+                oldTreeRoot.design();
+            }
+
+            long totalTime = 0;
+            for (int i = 0; i < MEASURE_ITERATIONS; i++) {
+                long startTime = System.nanoTime();
+                Object result = oldTreeRoot.design();
+                long endTime = System.nanoTime();
+                long duration = endTime - startTime;
+                totalTime += duration;
+                writer.println("Iteration " + (i + 1) + ": " + duration + " ns");
+            }
+            long averageTime = totalTime / MEASURE_ITERATIONS;
+            writer.println("Average time for MixedOldTree.design() at depth " + max_depth + ": " + averageTime + " ns");
+            writer.println("------------------------------------------------------");
+        }
+    }*/
 }

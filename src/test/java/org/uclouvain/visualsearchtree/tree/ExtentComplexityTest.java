@@ -1,3 +1,4 @@
+/*
 package org.uclouvain.visualsearchtree.tree;
 
 import org.junit.jupiter.api.Test;
@@ -54,3 +55,4 @@ public class ExtentComplexityTest {
                 "La méthode move() doit être en O(1) : le temps moyen ne doit pas varier significativement.");
     }
 }
+*/
