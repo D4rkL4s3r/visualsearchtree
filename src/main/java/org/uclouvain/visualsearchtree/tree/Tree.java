@@ -105,7 +105,7 @@ public class Tree {
 
         private Pair<PositionedNode<T>, Extent> design_() {
             if (children.isEmpty()) {
-                Extent extent = new Extent(0.0, -0.5, 0.5);
+                Extent extent = new Extent(0.0, 0.0, 0.0);
                 PositionedNode<T> positioned = new PositionedNode<>(nodeId, label, type, new LinkedList<>(), edgeLabels, nodeAction, 0.0, info);
                 return new Pair<>(positioned, extent);
             }
@@ -119,7 +119,7 @@ public class Tree {
                 subtreeExtents.add(res.right());
             }
 
-            List<Double> positions = ExtentUtils.fitList(subtreeExtents);
+            List<Double> positions = Extent.fitList(subtreeExtents);
 
             List<PositionedNode<T>> subtreesMoved = new LinkedList<>();
             List<Extent> extentsMoved = new LinkedList<>();
@@ -135,7 +135,7 @@ public class Tree {
                 extentsMoved.add(extent.move(pos));
             }
 
-            Extent resExtent = extentsMoved.stream().reduce(new Extent(0.0, 0.0, 0.0), ExtentUtils::merge);
+            Extent resExtent = extentsMoved.stream().reduce(new Extent(0.0, 0.0, 0.0), Extent::merge);
             PositionedNode<T> resTree = new PositionedNode<>(nodeId, label, type, subtreesMoved, edgeLabels, nodeAction, 0.0, info);
             return new Pair<>(resTree, resExtent);
         }
@@ -185,9 +185,7 @@ public class Tree {
         public Extent move(double x) {
             return new Extent(basePosition + x, left, right);
         }
-    }
 
-    static class ExtentUtils {
         public static double fit(Extent left, Extent right) {
             return left.basePosition + left.right - (right.basePosition + right.left) + 1.0;
         }
