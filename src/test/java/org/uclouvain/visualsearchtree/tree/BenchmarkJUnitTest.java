@@ -63,7 +63,7 @@ public class BenchmarkJUnitTest {
         }
     }
 
-   /* @ParameterizedTest
+    @ParameterizedTest
     @CsvSource({
            "5000, 0", //nodes
            "10000, 0",
@@ -110,9 +110,9 @@ public class BenchmarkJUnitTest {
             writer.println("Average time for DegeneratedTree.design() at max_nodes " + max_nodes + ": " + averageTime + " ns");
             writer.println("------------------------------------------------------");
         }
-    }*/
+    }
 
-    /*@ParameterizedTest
+    @ParameterizedTest
     @CsvSource({
             "5, 0",
             "6, 0",
@@ -160,9 +160,9 @@ public class BenchmarkJUnitTest {
             writer.println("Average time for MixedTree.design() at depth " + max_depth + ": " + averageTime + " ns");
             writer.println("------------------------------------------------------");
         }
-    }*/
+    }
 
-    /*@ParameterizedTest
+    @ParameterizedTest
     @CsvSource({
             "5, 0", // 63 nodes -> 2^(max_depth+1)-1
             "6, 0",
@@ -309,5 +309,5 @@ public class BenchmarkJUnitTest {
             writer.println("Average time for MixedOldTree.design() at depth " + max_depth + ": " + averageTime + " ns");
             writer.println("------------------------------------------------------");
         }
-    }*/
+    }
 }
