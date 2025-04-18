@@ -1,13 +1,33 @@
 package org.uclouvain.visualsearchtree.tree;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import javafx.application.Platform;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.uclouvain.visualsearchtree.examples.NQueensPrune;
+import org.uclouvain.visualsearchtree.examples.SolverListener;
+
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class TreeExtentComparisonTest {
+
+    static class JsonNode {
+        int id;
+        Integer parentId; // Peut être null pour la racine
+        String type; // "INNER", "FAIL", "SOLUTION"
+        String info;
+    }
 
     private void compareExtents(OldTree.Node<String> oldNode, Tree.Node<String> newNode) throws Exception {
         Method oldDesignMethod = OldTree.Node.class.getDeclaredMethod("design_");
@@ -133,5 +153,74 @@ public class TreeExtentComparisonTest {
         }
 
         compareExtents(oldTree.root(), newTree.root());
+    }
+
+    @Test
+    public void testLargeTreeFromJson() throws Exception {
+        // Charger le JSON depuis le classpath
+        Gson gson = new Gson();
+        Type nodeListType = new TypeToken<List<JsonNode>>(){}.getType();
+        List<JsonNode> nodes;
+        String jsonFilePath = "C:\\Users\\maxim\\Documents\\Ecole\\UCL\\Master2\\TFE\\myvisualsearchtree\\src\\test\\ressources\\large_tree.json"; // Ajustez le chemin
+        try (FileReader reader = new FileReader(jsonFilePath)) {
+            nodes = gson.fromJson(reader, nodeListType);
+        }
+
+        // Initialiser les arbres
+        OldTree oldTree = new OldTree(1);
+        Tree newTree = new Tree(1);
+
+        // Construire les arbres à partir des nœuds du JSON
+        for (JsonNode node : nodes) {
+            if (node.parentId != null) {
+                OldTree.NodeType oldNodeType = OldTree.NodeType.valueOf(node.type);
+                Tree.NodeType newNodeType = Tree.NodeType.valueOf(node.type);
+                oldTree.createNode(node.id, node.parentId, oldNodeType, () -> {}, node.info);
+                newTree.createNode(node.id, node.parentId, newNodeType, () -> {}, node.info);
+            }
+        }
+
+        // Comparer les Extents des arbres
+        compareExtents(oldTree.root(), newTree.root());
+    }
+
+    @Test
+    public void testWithProblems() throws Exception {
+        NQueensPrune nqueensFour = new NQueensPrune(4);
+        NQueensPrune nqueensSix = new NQueensPrune(6);
+        TreeVisual tv = new TreeVisual();
+        OldTreeVisual oldTv = new OldTreeVisual();
+        Gson gson = new Gson();
+
+        nqueensFour.dfs(new SolverListener() {
+            @Override
+            public void solution(int id, int pId) {
+                String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+"\"}";
+                TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
+                tv.createNode(id, pId, Tree.NodeType.SOLUTION, () -> {}, info);
+                oldTv.createNode(id, pId, OldTree.NodeType.SOLUTION, () -> {}, info);
+            }
+
+            @Override
+            public void fail(int id, int pId) {
+                String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+"\"}";
+                TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
+                tv.createNode(id, pId, Tree.NodeType.FAIL, () -> {}, info);
+                oldTv.createNode(id, pId, OldTree.NodeType.FAIL, () -> {}, info);
+            }
+
+            @Override
+            public void branch(int id, int pId, int nChilds) {
+                String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+"\"}";
+                TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
+                tv.createNode(id, pId, Tree.NodeType.INNER, () -> {}, info);
+                oldTv.createNode(id, pId, OldTree.NodeType.INNER, () -> {}, info);
+            }
+        });
+
+        Tree.Node<String> treeRoot= tv.getNode();
+        OldTree.Node<String> oldTreeRoot = oldTv.getNode();
+
+        compareExtents(oldTreeRoot, treeRoot);
     }
 }
