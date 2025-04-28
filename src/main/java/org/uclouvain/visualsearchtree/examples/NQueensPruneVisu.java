@@ -37,15 +37,17 @@ import java.util.Map;
 public class NQueensPruneVisu {
 
     public static void main(String[] args) throws InterruptedException {
-        NQueensPrune nqueens = new NQueensPrune(4);
+        build(4);
+    }
+
+    public static TreeVisual build(int nQueens) throws InterruptedException {
+        NQueensPrune nqueens = new NQueensPrune(nQueens);
         TreeVisual tv = new TreeVisual();
         Gson gson = new Gson();
 
         tv.setRealtimeNbNodeDrawer(20);
         tv.setRealtimeItv(300);
-        Visualizer.show(tv);
-
-        long startTime = System.nanoTime(); // Début du chronométrage
+        //Visualizer.show(tv);
 
         Thread t2 = new Thread(() -> {
             nqueens.dfs(new SolverListener() {
@@ -70,13 +72,12 @@ public class NQueensPruneVisu {
                     tv.createNode(id, pId, Tree.NodeType.INNER, () -> showChessBoard(infoData, Tree.NodeType.INNER), info);
                 }
             });
-            long endTime = System.nanoTime(); // Fin du chronométrage
-            long duration = (endTime - startTime) / 1_000_000; // Convertir en millisecondes
-            System.out.println("Temps de construction de l'arbre : " + duration + " ms");
         });
 
         t2.start();
         t2.join();
+
+        return tv;
     }
 
 

@@ -22,6 +22,10 @@
 <VBox id="vbox" prefHeight="400" prefWidth="800" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.uclouvain.visualsearchtree.tree.TreeUIController">
 
    <MenuBar fx:id="menuBar">
+      <Menu text="Tree">
+         <MenuItem fx:id="exportTree" onAction="#exportTree" text="Export tree" />
+         <MenuItem fx:id="importTree" onAction="#importTree" text="Import tree" />
+      </Menu>
       <Menu text="Node">
          <MenuItem fx:id="showLabels" onAction="#showNodeLabels" text="Show Labels" />
          <MenuItem fx:id="showInfos" onAction="#showNodeInfos" text="Show Infos" />
@@ -31,9 +35,10 @@
          <SeparatorMenuItem />
          <MenuItem fx:id="closeMenu" onAction="#closeWindow" text="Exit" />
       </Menu>
-      <Menu text="Tree">
-         <MenuItem fx:id="exportTree" onAction="#exportTree" text="Export tree" />
-         <MenuItem fx:id="importTree" onAction="#importTree" text="Import tree" />
+      <Menu text="Examples">
+         <MenuItem fx:id="nQueens" onAction="#nQueens" text="NQueens" />
+         <SeparatorMenuItem />
+         <MenuItem fx:id="clearTree" onAction="#clearTree" text="Clear tree" />
       </Menu>
       <Menu text="Help">
          <MenuItem disable="true" text="Search" />

@@ -5,6 +5,7 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
@@ -16,8 +17,10 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
@@ -35,6 +38,8 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.uclouvain.visualsearchtree.examples.NQueensPruneVisu;
+import org.uclouvain.visualsearchtree.util.Helper;
 
 import java.io.*;
 import java.util.HashMap;
@@ -69,6 +74,10 @@ public class TreeUIController {
     public MenuItem about;
     public HBox tableHbox;
     public Tab bookMarksTab;
+    public MenuItem nQueens;
+    public MenuItem clearTree;
+    public MenuItem exportTree;
+    public MenuItem importTree;
     public TableView<Map.Entry<String,String>> bookMarksTableView;
 
     @FXML
@@ -80,6 +89,8 @@ public class TreeUIController {
     @FXML
     public VBox chartUI;
 
+    private int nQueensSize;
+
     /**
      * @param instance TreeVisual instance
      */
@@ -89,12 +100,14 @@ public class TreeUIController {
 
     // Init methods
     public  void init() throws FileNotFoundException {
-        resize();
-        makeSkipButtonSticky();
-        alignMenuItemText();
-        attachEvent();
-        initTableInfo();
-        initBookMarksTable();
+        if (instance != null){
+            resize();
+            makeSkipButtonSticky();
+            alignMenuItemText();
+            attachEvent();
+            initTableInfo();
+            initBookMarksTable();
+        }
     }
 
     public void resize(){
@@ -444,6 +457,72 @@ public class TreeUIController {
             System.out.println("Skip Button has been clicked");
             anchorSkip.getChildren().remove(skipBtn);
         }
+    }
+
+    private void refreshUI() throws FileNotFoundException {
+        // Nettoyer les composants existants
+        treeroot.getChildren().clear();
+        infoTableView.getItems().clear();
+        bookMarksTableView.getItems().clear();
+        chartUI.getChildren().clear();
+
+        // Réinitialiser la taille et le zoom
+        treeroot.setMinHeight(stackPaneMinHeight);
+        treeroot.setMinWidth(stackPaneMinWidth);
+        treeroot.setScaleX(1);
+        treeroot.setScaleY(1);
+
+        // Réinitialiser l'arbre
+        if (instance != null) {
+            // Ajouter les nœuds de l'arbre à treeroot
+            instance.getTreeChart(radioAllNodes.isSelected());
+
+            // Réinitialiser les autres composants
+            init(); // Appelle init pour réinitialiser les tables, événements, etc.
+
+            // Centrer le scroll pane
+            var values = Helper.centerScrollPaneBar(treeroot, treeScrollPane);
+            treeScrollPane.setVvalue(values.get(0));
+            treeScrollPane.setHvalue(values.get(1));
+        } else {
+            // Si instance est null, afficher un placeholder
+            treeroot.getChildren().add(new Label("Aucun arbre chargé."));
+        }
+    }
+
+    public void nQueens(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NQueensInputUI.fxml"));
+            Parent formRoot = fxmlLoader.load();
+            NQueensInputController controller = fxmlLoader.getController();
+            controller.setCallback(n -> this.nQueensSize = n);
+
+            Scene scene = new Scene(formRoot, 400, 200);
+            Stage nQueensStage = new Stage();
+            nQueensStage.setTitle("N-Queens Problem");
+            nQueensStage.setScene(scene);
+            nQueensStage.initOwner(menuBar.getScene().getWindow());
+            nQueensStage.setResizable(false);
+            nQueensStage.showAndWait();
+
+            if (nQueensSize > 0) {
+                System.out.println("Number of queens set to: " + nQueensSize);
+                instance = NQueensPruneVisu.build(nQueensSize);
+                VisualTree.updateProfiler(instance);
+            } else {
+                System.out.println("No valid number of queens provided.");
+            }
+        } catch (IOException e) {
+            showInformationAlert("Error", "Failed to load N-Queens input form: " + e.getMessage());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void clearTree(ActionEvent actionEvent) throws FileNotFoundException {
+        System.out.println("Arbre deleted");
+        instance = null;
+        init();
     }
 
     public void exportTree(ActionEvent actionEvent) {
