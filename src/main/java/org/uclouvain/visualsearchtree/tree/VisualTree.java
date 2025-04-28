@@ -37,7 +37,9 @@ import java.io.IOException;
  */
 public class VisualTree {
 
+    private static Parent root;
     private static Stage  outputStage;
+    private static Scene outputScene;
     private static TreeUIController treeController;
     private static StackPane treeroot;
     private static VBox legendbox;
@@ -59,32 +61,32 @@ public class VisualTree {
             public void run() {
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TreeUI.fxml"));
-                    Parent root = fxmlLoader.load();
-                    TreeUIController treeController = fxmlLoader.getController();
+                    root = fxmlLoader.load();
+                    treeController = fxmlLoader.getController();
                     treeController.setInstance(instance);
 
                     Group treeGroup = instance.getGroup();
                     primaryStage.setAlwaysOnTop(true);
-                    Scene scene = new Scene(root, 500, 700);
+                    outputScene = new Scene(root, 500, 700);
 
                     outputStage = new Stage();
                     outputStage.initOwner(primaryStage);
-                    outputStage.setScene(scene);
+                    outputStage.setScene(outputScene);
                     outputStage.show();
 
-                    treeroot = (StackPane) scene.lookup("#treeroot");
+                    treeroot = (StackPane) outputScene.lookup("#treeroot");
                     treeroot.getChildren().add(treeGroup);
 
                     AnimationFactory.zoomOnSCroll(treeroot);
 
-                    legendbox = (VBox) scene.lookup("#legendbox");
+                    legendbox = (VBox) outputScene.lookup("#legendbox");
                     legendbox.getChildren().add(instance.generateLegendsStack());
                     treeController.init();
 
                     /** GRAPH **/
                     // Creating the chart
                     final LineChart<Number,Number> lineChart = instance.getTreeChart(true);
-                    chartUI = (VBox) scene.lookup("#chartUI");
+                    chartUI = (VBox) outputScene.lookup("#chartUI");
                     chartUI.getChildren().add(lineChart);
 
                     instance.addEventOnChart();
@@ -107,34 +109,35 @@ public class VisualTree {
             @Override
             public void run() {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TreeUI.fxml"));
-                Parent root = null;
                 try {
                     root = fxmlLoader.load();
-                    TreeUIController treeController = fxmlLoader.getController();
+                    treeController = fxmlLoader.getController();
                     treeController.setInstance(instance);
 
-                    Scene scene = new Scene(root, 500, 700);
-                    StackPane p = instance.getTreeStackPane();
+                    //outputScene = new Scene(root, 500, 700);
+                    treeroot = instance.getTreeStackPane();
 
-                    Stage outputStage = new Stage();
+                    //Stage outputStage = new Stage();
 
-                    outputStage.setScene(scene);
+                    outputStage.setScene(outputScene);
                     outputStage.show();
 
-                    StackPane sp = (StackPane) scene.lookup("#treeroot");
-                    sp.getChildren().add(p);
+                    StackPane sp = (StackPane) outputScene.lookup("#treeroot");
+                    sp.getChildren().add(treeroot);
 
                     AnimationFactory.zoomOnSCroll(sp);
 
-                    VBox legendbox = (VBox) scene.lookup("#legendbox");
+                    legendbox.getChildren().clear();
+                    legendbox = (VBox) outputScene.lookup("#legendbox");
                     legendbox.getChildren().add(instance.generateLegendsStack());
-                    treeController.init();
 
                     /** GRAPH **/
-                    VBox chart = (VBox) scene.lookup("#chartUI");
-                    chart.getChildren().add(instance.getTreeChart(true));
+                    chartUI.getChildren().clear();
+                    chartUI = (VBox) outputScene.lookup("#chartUI");
+                    chartUI.getChildren().add(instance.getTreeChart(true));
                     instance.addEventOnChart();
 
+                    treeController.init();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -144,20 +147,16 @@ public class VisualTree {
 
     /** Met à jour le contenu de la fenêtre existante **/
     public static void updateProfiler(TreeVisual instance) throws FileNotFoundException {
+        if (treeController == null) {
+            throw new IllegalStateException("TreeUIController not initialized. Call treeProfilerLauncher first.");
+        }
+        treeroot = instance.getTreeStackPane();
         treeController.setInstance(instance);
-
-        // Remplacement du Group de l'arbre
         treeroot.getChildren().setAll(instance.getGroup());
-
-        // Remplacement de la légende
         legendbox.getChildren().setAll(instance.generateLegendsStack());
-
-        // Remplacement du graphe
-        LineChart<Number,Number> newChart = instance.getTreeChart(true);
+        LineChart<Number, Number> newChart = instance.getTreeChart(true);
         chartUI.getChildren().setAll(newChart);
         instance.addEventOnChart();
-
-        // On remet la fenêtre au premier plan
         outputStage.toFront();
     }
 }

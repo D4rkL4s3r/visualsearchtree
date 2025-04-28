@@ -33,6 +33,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
@@ -89,6 +90,8 @@ public class TreeUIController {
     @FXML
     public VBox chartUI;
 
+    private boolean keyPressedHandlerSet = false;
+
     private int nQueensSize;
 
     /**
@@ -107,6 +110,15 @@ public class TreeUIController {
             attachEvent();
             initTableInfo();
             initBookMarksTable();
+
+            System.out.println("Dimensions de treeroot : " + treeroot.getWidth() + " x " + treeroot.getHeight());
+            treeroot.setMinSize(400, 400); // Forcer une taille minimale
+            treeroot.setVisible(true);
+        }
+        System.out.println("Contenu de treeScrollPane : " + treeScrollPane.getContent());
+        if (treeScrollPane.getContent() == null) {
+            treeScrollPane.setContent(treeroot);
+            System.out.println("treeroot défini comme contenu de treeScrollPane");
         }
     }
 
@@ -225,68 +237,63 @@ public class TreeUIController {
     /**
      * Attach keyEvent on the scene
      */
-    public void attachEvent(){
-//        var tv = new TreeVisual();
-//        tv.onDrawFinished(() ->{
-//            var values = Helper.centerScrollPaneBar(treeroot, treeScrollPane);
-//
-//            treeScrollPane.setVvalue(values.get(0));
-//            treeScrollPane.setHvalue(values.get(1));
-//        });
+    public void attachEvent() {
+        Scene scene = menuBar.getScene();
+        if (scene == null) {
+            System.out.println("Impossible d'attacher les événements : menuBar.getScene() est null.");
+            return;
+        }
 
-        menuBar.getScene().setOnKeyPressed(ev ->{
-            if(ev.getCode()== KeyCode.L){
+        if (keyPressedHandlerSet) {
+            System.out.println("Gestionnaire onKeyPressed déjà défini. Éviter de le remplacer.");
+            return;
+        }
+
+        if (scene.getOnKeyPressed() != null) {
+            System.out.println("Un gestionnaire onKeyPressed est déjà attaché à la Scene.");
+            return;
+        }
+
+        scene.setOnKeyPressed(ev -> {
+            if (ev.getCode() == KeyCode.L) {
                 showAllLabels();
             }
-            if(ev.getCode()== KeyCode.I){
+            if (ev.getCode() == KeyCode.I) {
                 displayNodeInfos();
             }
-            if(ev.getCode()== KeyCode.O){
+            if (ev.getCode() == KeyCode.O) {
                 displayGraph();
             }
-            if(ev.getCode()== KeyCode.B){
-                if(ev.isControlDown()){
+            if (ev.getCode() == KeyCode.B) {
+                if (ev.isControlDown()) {
                     try {
                         addOrRemoveBookMarks();
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                }else{
+                } else {
                     displayBookMarks();
                 }
             }
         });
+        keyPressedHandlerSet = true;
+        System.out.println("Nouveau gestionnaire onKeyPressed défini sur la Scene.");
 
-        // Check if radio btn changed
+        // Gestion du changement des boutons radio (inchangée)
         graphType.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             @Override
             public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
                 RadioButton tmp = (RadioButton)newValue;
-
-                //chartUI.getChildren().remove(0);
+                chartUI.getChildren().remove(0);
                 if (tmp.getText() == radioAllNodes.getText()) {
-                        instance.getTreeChart(true);
-                        instance.addEventOnChart();
-                }else {
-                        instance.getTreeChart(false);
-                        instance.addEventOnChart();
+                    instance.getTreeChart(true);
+                    instance.addEventOnChart();
+                } else {
+                    instance.getTreeChart(false);
+                    instance.addEventOnChart();
                 }
             }
         });
-
-//        zoomSlider.setOnMouseClicked(e ->{
-//            double zoomValue = zoomSlider.getValue();
-//            if (zoomValue == DEFAULT_SLIDER_VALUE) {
-//                treeroot.setMinHeight(stackPaneMinHeight);
-//                treeroot.setMinWidth(stackPaneMinWidth);
-//                treeroot.setScaleY(1);
-//                treeroot.setScaleY(1);
-//            }else if (zoomValue <DEFAULT_SLIDER_VALUE) {
-//                zoomOut(zoomValue);
-//            }else {
-//                zoomIn(zoomValue);
-//            }
-//        });
     }
 
     /**
@@ -508,7 +515,25 @@ public class TreeUIController {
             if (nQueensSize > 0) {
                 System.out.println("Number of queens set to: " + nQueensSize);
                 instance = NQueensPruneVisu.build(nQueensSize);
-                VisualTree.updateProfiler(instance);
+
+                /*try {
+                    Group treeGroup = instance.getGroup();
+                    System.out.println("Nombre d'éléments dans treeGroup : " + treeGroup.getChildren().size());
+                    Platform.runLater(() -> {
+                        treeroot.getChildren().clear(); // Nettoyer les anciens éléments
+                        treeroot.getChildren().add(treeGroup); // Ajouter le nouvel arbre
+                        System.out.println("Nombre d'enfants dans treeroot : " + treeroot.getChildren().size());
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace(); // Capturer toute erreur
+                }*/
+
+                //chartUI.getChildren().setAll(instance.getTreeChart(true));
+                //instance.addEventOnChart();
+                // ouvre dans une deuxième fenètre
+                Visualizer.show(instance);
+
+                //init();
             } else {
                 System.out.println("No valid number of queens provided.");
             }

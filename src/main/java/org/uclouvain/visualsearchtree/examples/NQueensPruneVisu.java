@@ -37,17 +37,13 @@ import java.util.Map;
 public class NQueensPruneVisu {
 
     public static void main(String[] args) throws InterruptedException {
-        build(4);
-    }
-
-    public static TreeVisual build(int nQueens) throws InterruptedException {
-        NQueensPrune nqueens = new NQueensPrune(nQueens);
+        NQueensPrune nqueens = new NQueensPrune(4);
         TreeVisual tv = new TreeVisual();
         Gson gson = new Gson();
 
         tv.setRealtimeNbNodeDrawer(20);
         tv.setRealtimeItv(300);
-        //Visualizer.show(tv);
+        Visualizer.show(tv);
 
         Thread t2 = new Thread(() -> {
             nqueens.dfs(new SolverListener() {
@@ -76,7 +72,43 @@ public class NQueensPruneVisu {
 
         t2.start();
         t2.join();
+    }
 
+    public static TreeVisual build(int nQueens) throws InterruptedException {
+        NQueensPrune nqueens = new NQueensPrune(nQueens);
+        TreeVisual tv = new TreeVisual();
+        Gson gson = new Gson();
+
+        tv.setRealtimeNbNodeDrawer(20);
+        tv.setRealtimeItv(300);
+
+        Thread t2 = new Thread(() -> {
+            nqueens.dfs(new SolverListener() {
+                @Override
+                public void solution(int id, int pId) {
+                    String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(nqueens.q)+"\"}";
+                    TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
+                    tv.createNode(id, pId, Tree.NodeType.SOLUTION, () -> showChessBoard(infoData, Tree.NodeType.SOLUTION), info);
+                }
+
+                @Override
+                public void fail(int id, int pId) {
+                    String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(nqueens.q)+"\"}";
+                    TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
+                    tv.createNode(id, pId, Tree.NodeType.FAIL, () -> showChessBoard(infoData, Tree.NodeType.FAIL), info);
+                }
+
+                @Override
+                public void branch(int id, int pId, int nChilds) {
+                    String info = "{\"cost\": "+id+", \"domain\": "+id+", \"other\": \""+ getNodeValue(nqueens.q)+"\"}";
+                    TreeVisual.NodeInfoData infoData = gson.fromJson(info, new TypeToken<TreeVisual.NodeInfoData>(){}.getType());
+                    tv.createNode(id, pId, Tree.NodeType.INNER, () -> showChessBoard(infoData, Tree.NodeType.INNER), info);
+                }
+            });
+        });
+
+        t2.start();
+        t2.join();
         return tv;
     }
 
