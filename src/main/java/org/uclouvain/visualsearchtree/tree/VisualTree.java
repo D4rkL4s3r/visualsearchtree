@@ -115,11 +115,18 @@ public class VisualTree {
                     treeController.setInstance(instance);
 
                     //outputScene = new Scene(root, 500, 700);
-                    treeroot = instance.getTreeStackPane();
+                    if (instance == null) {
+                        treeroot = new StackPane();
+                    } else {
+                        treeroot = instance.getTreeStackPane();
+                    }
 
-                    //Stage outputStage = new Stage();
-
-                    outputStage.setScene(outputScene);
+                    if (treeroot.getChildren().size() != 0) {
+                        outputStage.setScene(outputScene);
+                    } else {
+                        outputScene = new Scene(root, 500, 700);
+                        outputStage.setScene(outputScene);
+                    }
                     outputStage.show();
 
                     StackPane sp = (StackPane) outputScene.lookup("#treeroot");
@@ -129,13 +136,16 @@ public class VisualTree {
 
                     legendbox.getChildren().clear();
                     legendbox = (VBox) outputScene.lookup("#legendbox");
-                    legendbox.getChildren().add(instance.generateLegendsStack());
+                    if (instance != null)
+                        legendbox.getChildren().add(instance.generateLegendsStack());
 
                     /** GRAPH **/
                     chartUI.getChildren().clear();
                     chartUI = (VBox) outputScene.lookup("#chartUI");
-                    chartUI.getChildren().add(instance.getTreeChart(true));
-                    instance.addEventOnChart();
+                    if (instance != null) {
+                        chartUI.getChildren().add(instance.getTreeChart(true));
+                        instance.addEventOnChart();
+                    }
 
                     treeController.init();
                 } catch (IOException e) {

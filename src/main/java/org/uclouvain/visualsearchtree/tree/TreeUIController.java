@@ -546,8 +546,9 @@ public class TreeUIController {
 
     public void clearTree(ActionEvent actionEvent) throws FileNotFoundException {
         System.out.println("Arbre deleted");
-        instance = null;
-        init();
+        instance = new TreeVisual();
+        Visualizer.show(instance);
+        //init();
     }
 
     public void exportTree(ActionEvent actionEvent) {
